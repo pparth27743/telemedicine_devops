@@ -7,9 +7,12 @@ const {
     getUsers,
     updateUsers,
     deleteUser,
-    getUserByUserEmail
+    getUserByUserEmail,
+    validateUser
 } = require("./user.controller");
 
+
+router.get("/validate", checkToken, validateUser);
 router.post("/login", login);
 router.get("/getallusers", checkToken, getUsers);
 router.post("/signup", createUser);

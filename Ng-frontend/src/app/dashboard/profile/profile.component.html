@@ -1,14 +1,15 @@
 <div fxLayoutAlign="center center" fxFlexFill class="main-div">
   <mat-card fxFlex="33">
     <mat-toolbar color="primary">User Details</mat-toolbar>
-    <form fxLayoutAlign="stretch" fxLayout="column" class="details-form" [formGroup]="details">
+    <form fxLayoutAlign="stretch" fxLayout="column" class="details-form" [formGroup]="details"
+      (ngSubmit)="updateProfile()">
 
       <mat-form-field>
-        <input matInput type="text" placeholder="firstname" formControlName="first_name">
+        <input matInput type="text" placeholder="firstname" formControlName="firstname">
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput type="text" placeholder="lastname" formControlName="last_name">
+        <input matInput type="text" placeholder="lastname" formControlName="lastname">
       </mat-form-field>
 
       <mat-form-field>
@@ -19,5 +20,3 @@
     </form>
   </mat-card>
 </div>
-
-

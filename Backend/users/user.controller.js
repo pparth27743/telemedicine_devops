@@ -10,7 +10,14 @@ const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 
 module.exports = {
-    createUser: async (req, res) => {
+    validateUser:  (req, res) => {
+        return res.json({
+            success: 1,
+            message: "Valid Token...",
+            validtoken: 1
+          });
+    },
+    createUser:  (req, res) => {
         const body = req.body;
 
         const salt = genSaltSync(10);
@@ -28,14 +35,13 @@ module.exports = {
                 return res.json({
                     success: 1,
                     message: "Signup Successfully.",
-                    data: results
+                    data: results,
                 });
             }
         });
     },
     login: (req, res) => {
         const body = req.body;
-
         getUserByUserEmail(body.email, (err, results) => {
             if (err) {
                 console.log(err);
@@ -103,7 +109,9 @@ module.exports = {
     updateUsers: (req, res) => {
         const body = req.body;
         const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
+        if(body.password){
+            body.password = hashSync(body.password, salt);
+        }
         updateUser(body, (err, results) => {
             if(err) {
                 return res.json({

@@ -22,11 +22,15 @@ export class AuthServiceService {
     return this.currentUserSubject.value;
   }
 
+  validate():Observable<any> {
+    return this.http.get(`${baseUrl}users/validate`);
+  }
+
   login(data):Observable<any> {
     return this.http.post(`${baseUrl}users/login`, data)
-    .pipe(map(data => {
-      localStorage.setItem('currentUser', JSON.stringify(data['currentUser']));
-      return data;
+    .pipe(map(results => {
+      localStorage.setItem('currentUser', JSON.stringify(results['currentUser']));
+      return results;
     }));
   }
 

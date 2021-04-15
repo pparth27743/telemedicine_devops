@@ -6,8 +6,8 @@ module.exports = {
             `insert into ${process.env.MYSQL_DB}.users(firstName, lastName, email, password) 
                 values(?,?,?,?)`,
             [
-                data.first_name,
-                data.last_name,
+                data.firstname,
+                data.lastname,
                 data.email,
                 data.password,
             ],
@@ -56,11 +56,14 @@ module.exports = {
         );
     },
     updateUser: (data, callBack) => {
+            
+        // If password also needs to be changed.
+            if(data.password){
             pool.query(
                 `update ${process.env.MYSQL_DB}.users set firstName=?, lastName=?, email=?, password=? where id = ?`,
                 [
-                    data.first_name,
-                    data.last_name,
+                    data.firstname,
+                    data.lastname,
                     data.email,
                     data.password,
                     data.id
@@ -72,6 +75,24 @@ module.exports = {
                     return callBack(null, results);
                 }
             );
+            }
+            else{
+            pool.query(
+                `update ${process.env.MYSQL_DB}.users set firstName=?, lastName=?, email=? where id = ?`,
+                [
+                    data.firstname,
+                    data.lastname,
+                    data.email,
+                    data.id
+                ],
+                (error, results, fields) => {
+                    if (error) {
+                        callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            );
+            }
     },
     deleteUser: (data, callBack) => {
         pool.query(
