@@ -22,14 +22,16 @@ export class ProfileComponent implements OnInit {
 
   constructor(private usersService: UsersService, private authService: AuthServiceService, private router: Router) {
     
-    const user = localStorage.getItem('currentUser');
-    this.authService.validate().subscribe(result => {
-      // console.log(result.success);
-      if(result.validtoken === 0) {
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['/login']);
-      }
-    });
+    const user = this.authService.getcurrentUser;
+
+    // const user = localStorage.getItem('currentUser');
+    // this.authService.validate().subscribe(result => {
+    //   // console.log(result.success);
+    //   if(result.validtoken === 0) {
+    //     localStorage.removeItem('currentUser');
+    //     this.router.navigate(['login']);
+    //   }
+    // });
 
     if (user) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -56,10 +58,6 @@ export class ProfileComponent implements OnInit {
   updateProfile() {
     if (this.details.valid) {
       this.usersService.update(this.details.value).subscribe(result => {
-
-        console.log(result);
-
-
         if (result.success == 1) {
           alert(result.message);
           this.currentUser.firstname = this.details.value.firstname;
@@ -69,8 +67,8 @@ export class ProfileComponent implements OnInit {
         } else {
           alert(result.message);
           if (result.validtoken == 0) {
-            localStorage.removeItem('currentUser');
-            this.router.navigate(['/login']);
+            this.authService.logout();
+            this.router.navigate(['login']);
           }
         }
       })

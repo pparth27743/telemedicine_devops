@@ -26,6 +26,7 @@ import { JwtInterceptor } from './services/jwt.interceptor';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
     MatFormFieldModule,
@@ -33,7 +34,6 @@ import { JwtInterceptor } from './services/jwt.interceptor';
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     DashboardModule

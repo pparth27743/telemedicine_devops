@@ -19,6 +19,8 @@ export class AuthServiceService {
   }
 
   public get getcurrentUser() {
+    this.currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUser = this.currentUserSubject.asObservable();
     return this.currentUserSubject.value;
   }
 

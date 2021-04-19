@@ -9,20 +9,16 @@ import { AuthServiceService } from 'src/app/services/auth-service.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private authService:AuthServiceService, private router: Router) { 
+  constructor() { 
     
-    const user = localStorage.getItem('currentUser');
-    this.authService.validate().subscribe(result => {
-      // console.log(result.success);
-      if(result.validtoken === 0) {
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['/login']);
-      }
-    });
+    // const user = localStorage.getItem('currentUser');
+    // this.authService.validate().subscribe(result => {
+    //   if(result.validtoken === 0) {
+    //     this.authService.logout();
+    //     this.router.navigate(['login']);
+    //   }
+    // });
 
-    if (user) {
-    
-    }
   }
 
   ngOnInit(): void {

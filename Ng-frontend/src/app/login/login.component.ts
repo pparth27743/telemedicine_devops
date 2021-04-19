@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe(result => {
         if(result.success){
           alert(result.message);
-          this.router.navigate(['/dashboard/home']);
+          this.router.navigate(['dashboard/home']);
         }else{
           alert(result.message);
         }

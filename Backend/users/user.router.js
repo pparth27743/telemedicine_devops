@@ -13,10 +13,12 @@ const {
 
 
 router.get("/validate", checkToken, validateUser);
-router.post("/login", login);
 router.get("/getallusers", checkToken, getUsers);
-router.post("/signup", createUser);
 router.get("/:id", checkToken, getUserByUserId);
+
+router.post("/login", login);
+router.post("/signup", createUser);
+
 router.patch("/", checkToken, updateUsers);
 router.delete("/", checkToken, deleteUser);
 
