@@ -12,11 +12,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
-import { MatSidenavModule  } from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { ProfileComponent } from './profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -24,19 +24,27 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { FooterComponent } from './footer/footer.component';
-
+import { VideoComponent } from './shared/video/video.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
-  declarations: [HomeComponent, DashboardComponent, HeaderComponent, SidebarComponent, ProfileComponent, FooterComponent],
+  declarations: [HomeComponent,
+    DashboardComponent, 
+    HeaderComponent, 
+    SidebarComponent, 
+    ProfileComponent,
+    FooterComponent,
+    VideoComponent
+  ],
   imports: [
     CommonModule,
     DashboardRoutingModule,
     MatToolbarModule,
     MatIconModule,
     MatDividerModule,
-    MatButtonModule, 
-    MatMenuModule, 
+    MatButtonModule,
+    MatMenuModule,
     MatListModule,
     MatSidenavModule,
     MatCardModule,
@@ -49,8 +57,9 @@ import { FooterComponent } from './footer/footer.component';
     BrowserAnimationsModule,
     FlexLayoutModule,
     MatInputModule,
+    FontAwesomeModule
   ],
-  exports:[
+  exports: [
     FooterComponent
   ]
 })
