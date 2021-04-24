@@ -24,7 +24,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { FooterComponent } from './footer/footer.component';
-import { VideoComponent } from './shared/video/video.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
@@ -35,7 +34,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     SidebarComponent, 
     ProfileComponent,
     FooterComponent,
-    VideoComponent
   ],
   imports: [
     CommonModule,

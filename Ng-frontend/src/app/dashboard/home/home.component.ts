@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 
+
 const webrtcServerUrl = "http://localhost:4440";
 
 const mediaConstraints = {
@@ -69,11 +70,59 @@ export class HomeComponent implements OnInit {
   // Socket Functions
   setupSocket() {
     this.socket = io(webrtcServerUrl);
-    this.socket.on('room-joined', this.onRoomJoined);
-    this.socket.on('ice-candidate', this.onIceCandidate);
-    this.socket.on('send-metadata', this.onMetaData);
-    this.socket.on('offer', this.onOffer);
-    this.socket.on('answer', this.onAnswer);
+
+    this.socket.on('room-joined', async (data) => {
+      await this.setUpConnection(data['client-id'], data['client-name']);
+      this.socket.emit('send-metadata', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId, 'peer-id': data['client-id'] });
+    });
+
+    this.socket.on('ice-candidate', async (data) => {
+      if (data['peer-id'] === this.clientId) {
+        try {
+          await this.peerConnections[data['client-id']].pc.addIceCandidate(new RTCIceCandidate(data['ice-candidate']));
+        }
+        catch (error) {
+          this.handleError(error, "onIceCandidate");
+        }
+      }
+    });
+
+    this.socket.on('send-metadata', async (data) => {
+      if (data['peer-id'] === this.clientId) {
+        try {
+          await this.setUpConnection(data['client-id'], data['client-name'], true);
+        }
+        catch (error) {
+          this.handleError(error, "onMetaData");
+        }
+      }
+    });
+
+    this.socket.on('offer', async (data) => {
+      if (data['peer-id'] === this.clientId) {
+        try {
+          await this.peerConnections[data['client-id']].pc.setRemoteDescription(new RTCSessionDescription(data['offer-sdp']));
+          const answer = await this.peerConnections[data['client-id']].pc.createAnswer();
+          this.peerConnections[data['client-id']].pc.setLocalDescription(new RTCSessionDescription(answer));
+          this.socket.emit('answer', { 'room-id': this.roomId, 'answer-sdp': answer, 'client-id': this.clientId, 'peer-id': data['client-id'] });
+        }
+        catch (error) {
+          this.handleError(error, "onOffer");
+        }
+      }
+    });
+
+    this.socket.on('answer', async (data) => {
+      if (data['peer-id'] === this.clientId) {
+        try {
+          await this.peerConnections[data['client-id']].pc.setRemoteDescription(new RTCSessionDescription(data['answer-sdp']));
+        }
+        catch (error) {
+          this.handleError(error, "onAnswer");
+        }
+      }
+    });
+
   }
 
   async getUniqueId() {
@@ -85,18 +134,6 @@ export class HomeComponent implements OnInit {
         error => this.handleError(error, "getUniqueId->clientId backend call")
       );
   }
-
-  async onMetaData(data) {
-    if (data['peer-id'] === this.clientId) {
-      try {
-        await this.setUpConnection(data['client-id'], data['client-name'], true);
-      }
-      catch (error) {
-        this.handleError(error, "onMetaData");
-      }
-    }
-  }
-
 
   gotDevices(deviceInfos, selectors) {
     // Handles being called several times to update labels. Preserve values.
@@ -150,7 +187,6 @@ export class HomeComponent implements OnInit {
     this.renderer.appendChild(innerDiv, labelDiv);
 
     if (isLocalVideo === true) {
-      // const controlsDiv = document.createElement('div');
       const controlsDiv = this.renderer.createElement('div');
       controlsDiv.classList.add('text-center');
       controlsDiv.style.display = 'none';
@@ -162,9 +198,25 @@ export class HomeComponent implements OnInit {
       controlsDiv.style.marginLeft = '15px';
       controlsDiv.style.width = '351px';
       controlsDiv.style.fontSize = '40px';
-      controlsDiv.innerHTML = '<i class="fas fa-microphone" aria-hidden="true"></i>' +
-        '<i class="fas fa-video pl-5"></i>';
+
+
+      // let ele = this.renderer.createElement('fa-icon');
+      // this.renderer.setProperty(ele, "icon", "faCoffee");
+      // this.renderer.appendChild(controlsDiv, ele);
+      // controlsDiv.innerHTML = '<i class="fas fa-microphone" aria-hidden="true"></i>' + '<i class="fas fa-video pl-5"></i>';
       // + '<fa-icon icon="faCoffee"></fa-icon>'
+
+      // controlsDiv.innerHTML = '<i class="fas fa-microphone" style="cursor: pointer;"></i>' +
+      //   '<i class="fas fa-video ml-5" style="cursor: pointer;"></i>' +
+      //   '<i class="fas fa-phone-slash ml-5" style="color: orangered; cursor: pointer;"></i>';
+
+      // controlsDiv.innerHTML = '<button class="btn btn-warning>A</button>'
+      //   + '<button class="btn btn-warning>B</button>'
+      //   + '<button class="btn btn-warning>C</button>';
+
+
+      controlsDiv.innerHTML = '<button>A</button>' + '<button>B</button>' + '<button>C</button>';
+        
 
       innerDiv.addEventListener('mouseover', (mouseOverEvent) => {
         controlsDiv.style.display = 'block';
@@ -182,8 +234,10 @@ export class HomeComponent implements OnInit {
         controlsDiv.style.display = 'none';
       });
 
+
       controlsDiv.children[0].addEventListener('click', this.onClickAudioControl);
       controlsDiv.children[1].addEventListener('click', this.onClickVideoControl);
+      controlsDiv.children[2].addEventListener('click', this.onClickDisconnectControl);
 
       videoDisplayDiv.appendChild(controlsDiv);
     }
@@ -192,55 +246,16 @@ export class HomeComponent implements OnInit {
     return videoElement;
   }
 
-
-  async onIceCandidate(data) {
-    if (data['peer-id'] === this.clientId) {
-      try {
-        await this.peerConnections[data['client-id']].pc.addIceCandidate(new RTCIceCandidate(data['ice-candidate']));
-      }
-      catch (error) {
-        this.handleError(error, "onIceCandidate");
-      }
-    }
-  }
-
-
-
-  async onOffer(data) {
-    if (data['peer-id'] === this.clientId) {
-      try {
-        await this.peerConnections[data['client-id']].pc.setRemoteDescription(new RTCSessionDescription(data['offer-sdp']));
-        const answer = await this.peerConnections[data['client-id']].pc.createAnswer();
-        this.peerConnections[data['client-id']].pc.setLocalDescription(new RTCSessionDescription(answer));
-        this.socket.emit('answer', { 'room-id': this.roomId, 'answer-sdp': answer, 'client-id': this.clientId, 'peer-id': data['client-id'] });
-      }
-      catch (error) {
-        this.handleError(error, "onOffer");
-      }
-    }
-  }
-
-  async onAnswer(data) {
-    if (data['peer-id'] === this.clientId) {
-      try {
-        await this.peerConnections[data['client-id']].pc.setRemoteDescription(new RTCSessionDescription(data['answer-sdp']));
-      }
-      catch (error) {
-        this.handleError(error, "onAnswer");
-      }
-    }
-  }
-
   onClickAudioControl(audioControlElement) {
     if (this.muteaudio) {
       this.muteaudio = false;
       this.localStream.getAudioTracks()[0].enabled = true;
-      audioControlElement.target.classList.replace('fa-microphone-slash', 'fa-microphone');
+      // audioControlElement.target.classList.replace('fa-microphone-slash', 'fa-microphone');
     }
     else {
       this.muteaudio = true;
       this.localStream.getAudioTracks()[0].enabled = false;
-      audioControlElement.target.classList.replace('fa-microphone', 'fa-microphone-slash');
+      // audioControlElement.target.classList.replace('fa-microphone', 'fa-microphone-slash');
     }
   }
 
@@ -248,14 +263,51 @@ export class HomeComponent implements OnInit {
     if (this.mutevideo) {
       this.mutevideo = false;
       this.localStream.getVideoTracks()[0].enabled = true;
-      videoControlElement.target.classList.replace('fa-video-slash', 'fa-video');
+      // videoControlElement.target.classList.replace('fa-video-slash', 'fa-video');
     }
     else {
       this.mutevideo = true;
       this.localStream.getVideoTracks()[0].enabled = false;
-      videoControlElement.target.classList.replace('fa-video', 'fa-video-slash');
+      // videoControlElement.target.classList.replace('fa-video', 'fa-video-slash');
     }
   }
+
+  async onClickDisconnectControl(disconnectControlElement) {
+    this.localStream.getTracks().forEach((track) => {
+      track.stop();
+    });
+
+    Object.keys(this.peerConnections).forEach((key) => {
+      this.peerConnections[key].pc.ontrack = null;
+      this.peerConnections[key].pc.onremovetrack = null;
+      this.peerConnections[key].pc.onicecandidate = null;
+      this.peerConnections[key].pc.oniceconnectionstatechange = null;
+      this.peerConnections[key].pc.onsignalingstatechange = null;
+      this.peerConnections[key].pc.onicegatheringstatechange = null;
+      this.peerConnections[key].pc.onnegotiationneeded = null;
+      this.peerConnections[key].pc.close();
+      delete this.peerConnections[key];
+    });
+
+    this.peerConnections = {};
+    this.ListvideoElements[this.clientId + '-0'].srcObject = null;
+    let videoDisplayDiv = this.el_video_display.nativeElement;
+    const containerDiv = videoDisplayDiv.parentNode;
+    videoDisplayDiv.remove();
+    videoDisplayDiv = this.renderer.createComment('div');
+    videoDisplayDiv.setAttribute('id', 'video-display');
+    videoDisplayDiv.classList.add('row', 'mt-5');
+    containerDiv.appendChild(videoDisplayDiv);
+
+    this.el_btn_join_room.nativeElement.disabled = false;
+    this.el_btn_create_room.nativeElement.disabled = false;
+    this.el_room_id.nativeElement.disabled = false;
+    this.el_horizontal_row.nativeElement.disabled = false;
+    this.el_div_select.nativeElement.disabled = false;
+
+    this.socket.close();
+  }
+
 
 
   async setLocalMedia() {
@@ -331,8 +383,6 @@ export class HomeComponent implements OnInit {
 
   }
 
-
-
   async setRemoteStream(track, peerId) {
     this.ListvideoElements[peerId + '-0'].srcObject = track.streams[0];
   }
@@ -358,7 +408,6 @@ export class HomeComponent implements OnInit {
       elementToDelete.parentElement.removeChild(elementToDelete);
     }
   }
-
 
   async changeTracks() {
     if (Object.keys(this.peerConnections).length !== 0) {
@@ -403,7 +452,6 @@ export class HomeComponent implements OnInit {
       }).catch(error => this.handleError(error, "changeDevice"));
   }
 
-
   async createOffer(peerId) {
     try {
       const offer = await this.peerConnections[peerId].pc.createOffer();
@@ -415,8 +463,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-
-
   async setUpConnection(peerId, peerName, initiateCall = false) {
     const videoElement = this.getVideoElement(peerId, 0, peerName);
     videoElement.autoplay = true;
@@ -426,37 +472,11 @@ export class HomeComponent implements OnInit {
     this.peerConnections[peerId].pc.ontrack = (track) => { this.setRemoteStream(track, peerId); };
     this.addLocalStreamTracks(peerId);
     this.peerConnections[peerId].pc.onicecandidate = (iceCandidate) => { this.gatherIceCandidates(iceCandidate, peerId); };
-    this.peerConnections[peerId].pc.oniceconnectionstatechange = (event) => { this.checkPeerDisconnection(event, peerId); }
-
-    console.log(this.peerConnections);
-
+    this.peerConnections[peerId].pc.oniceconnectionstatechange = (event) => { this.checkPeerDisconnection(event, peerId); };
     if (initiateCall === true) {
       await this.createOffer(peerId);
     }
   }
-
-  async onRoomJoined(data) {
-    // await this.setUpConnection(data['client-id'], data['client-name']);
-    let peerId = data['client-id'];
-    let peerName = data['client-name'];
-    let initiateCall = false;
-    
-    const videoElement = this.getVideoElement(peerId, 0, peerName);
-    videoElement.autoplay = true;
-    // videoElement.muted = true;
-    videoElement.playsInline = true;
-    this.peerConnections[peerId] = { 'peer-name': peerName, 'pc': new RTCPeerConnection(iceServers) };
-    this.peerConnections[peerId].pc.ontrack = (track) => { this.setRemoteStream(track, peerId); };
-    this.addLocalStreamTracks(peerId);
-    this.peerConnections[peerId].pc.onicecandidate = (iceCandidate) => { this.gatherIceCandidates(iceCandidate, peerId); };
-    this.peerConnections[peerId].pc.oniceconnectionstatechange = (event) => { this.checkPeerDisconnection(event, peerId); }
-
-    console.log(this.peerConnections);
-    this.socket.emit('send-metadata', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId, 'peer-id': data['client-id'] });
-  }
-
-
-
 
   // Error Functions
   handleError(error, from = undefined) {
