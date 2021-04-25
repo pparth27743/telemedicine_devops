@@ -17,7 +17,7 @@ import { SignupComponent } from './signup/signup.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { JwtInterceptor } from './services/jwt.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @NgModule({
   declarations: [
@@ -40,7 +40,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     ReactiveFormsModule,
     DashboardModule,
     NgbModule,
-    FontAwesomeModule,
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]

@@ -2,8 +2,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-
 
 const webrtcServerUrl = "http://localhost:4440";
 
@@ -32,7 +30,6 @@ const iceServers = {
 })
 export class HomeComponent implements OnInit {
 
-  faCoffee = faCoffee;
 
   socket: Socket;
   createJoinRoomComponent: boolean = false;
@@ -199,24 +196,77 @@ export class HomeComponent implements OnInit {
       controlsDiv.style.width = '351px';
       controlsDiv.style.fontSize = '40px';
 
+      const toggleMicrophone = this.renderer.createElement('i');
+      this.renderer.setAttribute(toggleMicrophone, "class", 'fas fa-microphone');
 
-      // let ele = this.renderer.createElement('fa-icon');
-      // this.renderer.setProperty(ele, "icon", "faCoffee");
-      // this.renderer.appendChild(controlsDiv, ele);
-      // controlsDiv.innerHTML = '<i class="fas fa-microphone" aria-hidden="true"></i>' + '<i class="fas fa-video pl-5"></i>';
-      // + '<fa-icon icon="faCoffee"></fa-icon>'
+      const toggleVideo = this.renderer.createElement('i');
+      this.renderer.setAttribute(toggleVideo, "class", 'fas fa-video ml-5');
 
-      // controlsDiv.innerHTML = '<i class="fas fa-microphone" style="cursor: pointer;"></i>' +
-      //   '<i class="fas fa-video ml-5" style="cursor: pointer;"></i>' +
-      //   '<i class="fas fa-phone-slash ml-5" style="color: orangered; cursor: pointer;"></i>';
+      const disconnectCall = this.renderer.createElement('i');
+      this.renderer.setAttribute(disconnectCall, "class", 'fas fa-phone-slash ml-5 redcontrol');
+      disconnectCall.style.color = 'orangered';
 
-      // controlsDiv.innerHTML = '<button class="btn btn-warning>A</button>'
-      //   + '<button class="btn btn-warning>B</button>'
-      //   + '<button class="btn btn-warning>C</button>';
+      toggleMicrophone.addEventListener('click', (audioControlElement) => {
+        if (this.muteaudio) {
+          this.muteaudio = false;
+          this.localStream.getAudioTracks()[0].enabled = true;
+          audioControlElement.target.classList.replace('fa-microphone-slash', 'fa-microphone');
+        }
+        else {
+          this.muteaudio = true;
+          this.localStream.getAudioTracks()[0].enabled = false;
+          audioControlElement.target.classList.replace('fa-microphone', 'fa-microphone-slash');
+        }
+      });
 
+      toggleVideo.addEventListener('click', (videoControlElement) => {
+        if (this.mutevideo) {
+          this.mutevideo = false;
+          this.localStream.getVideoTracks()[0].enabled = true;
+          videoControlElement.target.classList.replace('fa-video-slash', 'fa-video');
+        }
+        else {
+          this.mutevideo = true;
+          this.localStream.getVideoTracks()[0].enabled = false;
+          videoControlElement.target.classList.replace('fa-video', 'fa-video-slash');
+        }
+      });
 
-      controlsDiv.innerHTML = '<button>A</button>' + '<button>B</button>' + '<button>C</button>';
-        
+      disconnectCall.addEventListener('click', (disconnectControlElement) => {
+        this.localStream.getTracks().forEach((track) => {
+          track.stop();
+        });
+
+        Object.keys(this.peerConnections).forEach((key) => {
+          this.peerConnections[key].pc.ontrack = null;
+          this.peerConnections[key].pc.onremovetrack = null;
+          this.peerConnections[key].pc.onicecandidate = null;
+          this.peerConnections[key].pc.oniceconnectionstatechange = null;
+          this.peerConnections[key].pc.onsignalingstatechange = null;
+          this.peerConnections[key].pc.onicegatheringstatechange = null;
+          this.peerConnections[key].pc.onnegotiationneeded = null;
+          this.peerConnections[key].pc.close();
+          delete this.peerConnections[key];
+        });
+
+        this.peerConnections = {};
+        this.ListvideoElements[this.clientId + '-0'].srcObject = null;
+        let videoDisplayDiv = this.el_video_display.nativeElement;
+        const containerDiv = videoDisplayDiv.parentNode;
+        videoDisplayDiv.remove();
+        videoDisplayDiv = this.renderer.createElement('div');
+        this.renderer.setAttribute(videoDisplayDiv, "id", 'video-display');
+        videoDisplayDiv.classList.add('row', 'mt-5');
+        containerDiv.appendChild(videoDisplayDiv);
+
+        this.el_btn_join_room.nativeElement.disabled = false;
+        this.el_btn_create_room.nativeElement.disabled = false;
+        this.el_room_id.nativeElement.disabled = false;
+        this.el_horizontal_row.nativeElement.disabled = false;
+        this.el_div_select.nativeElement.disabled = false;
+
+        this.socket.close();
+      });
 
       innerDiv.addEventListener('mouseover', (mouseOverEvent) => {
         controlsDiv.style.display = 'block';
@@ -232,12 +282,17 @@ export class HomeComponent implements OnInit {
 
       controlsDiv.addEventListener('mouseout', (mouseOutEvent) => {
         controlsDiv.style.display = 'none';
-      });
+      })
 
 
-      controlsDiv.children[0].addEventListener('click', this.onClickAudioControl);
-      controlsDiv.children[1].addEventListener('click', this.onClickVideoControl);
-      controlsDiv.children[2].addEventListener('click', this.onClickDisconnectControl);
+      this.renderer.appendChild(controlsDiv, toggleMicrophone);
+      this.renderer.appendChild(controlsDiv, toggleVideo);
+      this.renderer.appendChild(controlsDiv, disconnectCall);
+
+
+      // // controlsDiv.children[0].addEventListener('click', this.onClickAudioControl);
+      // controlsDiv.children[1].addEventListener('click', this.onClickVideoControl);
+      // controlsDiv.children[2].addEventListener('click', this.onClickDisconnectControl);
 
       videoDisplayDiv.appendChild(controlsDiv);
     }
@@ -245,69 +300,6 @@ export class HomeComponent implements OnInit {
 
     return videoElement;
   }
-
-  onClickAudioControl(audioControlElement) {
-    if (this.muteaudio) {
-      this.muteaudio = false;
-      this.localStream.getAudioTracks()[0].enabled = true;
-      // audioControlElement.target.classList.replace('fa-microphone-slash', 'fa-microphone');
-    }
-    else {
-      this.muteaudio = true;
-      this.localStream.getAudioTracks()[0].enabled = false;
-      // audioControlElement.target.classList.replace('fa-microphone', 'fa-microphone-slash');
-    }
-  }
-
-  onClickVideoControl(videoControlElement) {
-    if (this.mutevideo) {
-      this.mutevideo = false;
-      this.localStream.getVideoTracks()[0].enabled = true;
-      // videoControlElement.target.classList.replace('fa-video-slash', 'fa-video');
-    }
-    else {
-      this.mutevideo = true;
-      this.localStream.getVideoTracks()[0].enabled = false;
-      // videoControlElement.target.classList.replace('fa-video', 'fa-video-slash');
-    }
-  }
-
-  async onClickDisconnectControl(disconnectControlElement) {
-    this.localStream.getTracks().forEach((track) => {
-      track.stop();
-    });
-
-    Object.keys(this.peerConnections).forEach((key) => {
-      this.peerConnections[key].pc.ontrack = null;
-      this.peerConnections[key].pc.onremovetrack = null;
-      this.peerConnections[key].pc.onicecandidate = null;
-      this.peerConnections[key].pc.oniceconnectionstatechange = null;
-      this.peerConnections[key].pc.onsignalingstatechange = null;
-      this.peerConnections[key].pc.onicegatheringstatechange = null;
-      this.peerConnections[key].pc.onnegotiationneeded = null;
-      this.peerConnections[key].pc.close();
-      delete this.peerConnections[key];
-    });
-
-    this.peerConnections = {};
-    this.ListvideoElements[this.clientId + '-0'].srcObject = null;
-    let videoDisplayDiv = this.el_video_display.nativeElement;
-    const containerDiv = videoDisplayDiv.parentNode;
-    videoDisplayDiv.remove();
-    videoDisplayDiv = this.renderer.createComment('div');
-    videoDisplayDiv.setAttribute('id', 'video-display');
-    videoDisplayDiv.classList.add('row', 'mt-5');
-    containerDiv.appendChild(videoDisplayDiv);
-
-    this.el_btn_join_room.nativeElement.disabled = false;
-    this.el_btn_create_room.nativeElement.disabled = false;
-    this.el_room_id.nativeElement.disabled = false;
-    this.el_horizontal_row.nativeElement.disabled = false;
-    this.el_div_select.nativeElement.disabled = false;
-
-    this.socket.close();
-  }
-
 
 
   async setLocalMedia() {
