@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  db:
+    container_name: db
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootroot    
+ 
+  frontend:
+    container_name: frontend
+    restart: always
+    build: ./Ng-frontend/.
+    ports: 
+      - "4200:80"
+    depends_on: 
+      - backend
+      - webrtc-server
+
+  backend:
+    container_name: backend
+    restart: always
+    build: ./Backend/.
+    depends_on: 
+      - db
+
+  webrtc-server:
+    container_name: webrtc-server
+    restart: always
+    build: ./WebRTC_Signaling_Server/.
+
+          

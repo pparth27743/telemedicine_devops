@@ -4,7 +4,7 @@
   "description": "",
   "main": "webrtc-server.js",
   "scripts": {
-    "start": "nodemon webrtc-server.js",
+    "start": "node webrtc-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
