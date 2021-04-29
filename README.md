@@ -1,5 +1,3 @@
-
-# Project Elective
-
+# Audio Video Conferencing application
 
  
