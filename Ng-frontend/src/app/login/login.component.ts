@@ -4,39 +4,45 @@ import { Router } from '@angular/router';
 import { AuthServiceService } from '../services/auth-service.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
 
-  loginForm: FormGroup;
-  
-  constructor(private authService:AuthServiceService, private router: Router) { 
-  }
+    rolelist = [
+        { value: 'doctor', viewValue: 'Doctor' },
+        { value: 'paramedical', viewValue: 'Paramedical' },
+    ];
 
-  ngOnInit(): void {
-    this.initForm();
-  }
+    loginForm: FormGroup;
 
-  initForm (){
-    this.loginForm = new FormGroup({
-      email: new FormControl("alay@gmail.com", Validators.required),
-      password: new FormControl("alay@123")
-    });
-  }
-
-  loginProcess(){
-    if(this.loginForm.valid){
-      this.authService.login(this.loginForm.value).subscribe(result => {
-        if(result.success){
-          alert(result.message);
-          this.router.navigate(['dashboard/home']);
-        }else{
-          alert(result.message);
-        }
-      })
+    constructor(private authService: AuthServiceService, private router: Router) {
     }
-  }
+
+    ngOnInit(): void {
+        this.initForm();
+    }
+
+    initForm() {
+        this.loginForm = new FormGroup({
+            email: new FormControl("", Validators.required),
+            password: new FormControl("", Validators.required),
+            role: new FormControl("", Validators.required)
+    });
+}
+
+loginProcess() {
+    if (this.loginForm.valid) {
+        this.authService.login(this.loginForm.value).subscribe(result => {
+            if (result.success) {
+                alert(result.message);
+                this.router.navigate(['dashboard/home']);
+            } else {
+                alert(result.message);
+            }
+        })
+    }
+}
 
 }

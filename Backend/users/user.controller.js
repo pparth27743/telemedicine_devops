@@ -10,14 +10,14 @@ const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 
 module.exports = {
-    validateUser:  (req, res) => {
+    validateUser: (req, res) => {
         return res.json({
             success: 1,
             message: "Valid Token...",
             validtoken: 1
-          });
+        });
     },
-    createUser:  (req, res) => {
+    createUser: (req, res) => {
         const body = req.body;
 
         const salt = genSaltSync(10);
@@ -49,10 +49,10 @@ module.exports = {
             if (!results) {
                 return res.json({
                     success: 0,
-                    data: "Invalid email or password"
+                    message: "No such user exist.   "
                 });
             }
-            const result = compareSync(body.password, results.password);
+            const result = compareSync(body.password, results.password) && (body.role == results.role);
             if (result) {
                 results.password = undefined;
                 const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
@@ -69,7 +69,7 @@ module.exports = {
             } else {
                 return res.json({
                     success: 0,
-                    message: "Invalid email or password"
+                    message: "Invalid email or password or role"
                 });
             }
         });
@@ -109,18 +109,18 @@ module.exports = {
     updateUsers: (req, res) => {
         const body = req.body;
         const salt = genSaltSync(10);
-        if(body.password){
+        if (body.password) {
             body.password = hashSync(body.password, salt);
         }
         updateUser(body, (err, results) => {
-            if(err) {
+            if (err) {
                 return res.json({
                     success: 0,
                     message: "fail to update the data.",
                     error: err['sqlMessage']
                 });
             }
-            if(results){
+            if (results) {
                 return res.json({
                     success: 1,
                     message: "updated successfully",
@@ -132,7 +132,6 @@ module.exports = {
     deleteUser: (req, res) => {
         const data = req.body;
         deleteUser(data, (err, results) => {
-            console.log("result ::: " + results);
             if (err) {
                 console.log(err);
                 return;

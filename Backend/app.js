@@ -53,7 +53,8 @@ con.connect(function (err) {
       "`lastname` varchar(45) DEFAULT NULL," +
       "`email` varchar(45) NOT NULL," +
       "`password` varchar(100) NOT NULL," +
-      "PRIMARY KEY (`id`))", function (err, result) {
+      "`role` varchar(20) NOT NULL," +
+      "PRIMARY KEY (`id`),  UNIQUE (`email`))", function (err, result) {
         if (err) throw err;
         // console.log("Table created");
       });
@@ -63,7 +64,7 @@ con.connect(function (err) {
 
 const port = process.env.APP_PORT || 3000;
 app.listen(port, () => {
-  console.log("server up and running on PORT :", port);
+  console.log("Backend up and running on PORT :", port);
 });
 
 

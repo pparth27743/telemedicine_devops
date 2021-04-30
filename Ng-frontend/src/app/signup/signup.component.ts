@@ -10,31 +10,38 @@ import { AuthServiceService } from '../services/auth-service.service';
 })
 export class SignupComponent implements OnInit {
 
+  rolelist = [
+    { value: 'doctor', viewValue: 'Doctor' },
+    { value: 'paramedical', viewValue: 'Paramedical' },
+  ];
+
+
   signUpForm: FormGroup;
-  
-  constructor(private authService:AuthServiceService, private router: Router) { }
+
+  constructor(private authService: AuthServiceService, private router: Router) { }
 
   ngOnInit(): void {
     this.initForm();
   }
 
-  initForm (){
+  initForm() {
     this.signUpForm = new FormGroup({
       firstname: new FormControl("", Validators.required),
-      lastname: new FormControl("", Validators.required),
+      lastname: new FormControl(""),
       email: new FormControl("", Validators.required),
-      password: new FormControl("")
+      password: new FormControl("", Validators.required),
+      role: new FormControl("", Validators.required)
     });
   }
 
-  signupProcess(){
-    if(this.signUpForm.valid){
+  signupProcess() {
+    if (this.signUpForm.valid) {
       this.authService.signup(this.signUpForm.value).subscribe(result => {
-        if(result.success === 1){
+        if (result.success === 1) {
           console.log(result);
           alert(result.message);
           this.router.navigate(['login']);
-        }else{
+        } else {
           alert(result.message);
         }
       })

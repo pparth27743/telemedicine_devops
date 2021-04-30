@@ -11,8 +11,8 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-      {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+      { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     ]
   },
   { path: '**', redirectTo: 'dashboard/home' }

@@ -6,8 +6,7 @@ const httpServer = require("http").createServer(app);
 
 const io = require("socket.io")(httpServer, {
     cors: {
-        // origin: ["http://192.168.0.106:4200", "http://localhost:4200"],
-        origin: "*",
+        origin: "*",              // origin: ["http://192.168.0.106:4200", "http://localhost:4200"],
         methods: ["GET", "POST"]
     }
 });
@@ -15,6 +14,7 @@ const io = require("socket.io")(httpServer, {
 // Import uniqid and uuid
 const { v4: uuidv4 } = require('uuid');
 const uniqid = require('uniqid');
+
 
 // routes
 app.get('/clientId', (req, res) => {
@@ -34,14 +34,12 @@ app.get('/createRoom', (req, res) => {
 app.get('/joinRoom', (req, res) => {
     let roomId = req.query['roomId'];
     if (io.sockets.adapter.rooms.has(roomId) === true) {
-        // return res.status(200).send('Everything Cool !');
         return res.json({
             'status': 200,
-            'msg': 'Everything Cool !'
+            'msg': 'Congo!!! This room is available.'
         });
     }
     else {
-        // return res.status(400).send('No Room with such an ID');
         return res.json({
             'status': 400,
             'error': 'No Room with such an ID'
@@ -51,7 +49,6 @@ app.get('/joinRoom', (req, res) => {
 
 
 // sokcet listen and emmiter 
-msg = { 'hello': 'world' };
 io.on('connect', (socket) => {
 
     console.log(`Socket ${socket.id} has connected`);
@@ -88,5 +85,5 @@ io.on('connect', (socket) => {
 // run http server
 const port = 4440;
 httpServer.listen(port, () => {
-    console.log('Listening on port ' + port);
+    console.log('Webrtc Server is Listening on port ' + port);
 });

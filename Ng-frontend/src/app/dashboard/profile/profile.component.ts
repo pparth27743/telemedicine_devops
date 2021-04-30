@@ -24,15 +24,6 @@ export class ProfileComponent implements OnInit {
     
     const user = this.authService.getcurrentUser;
 
-    // const user = localStorage.getItem('currentUser');
-    // this.authService.validate().subscribe(result => {
-    //   // console.log(result.success);
-    //   if(result.validtoken === 0) {
-    //     localStorage.removeItem('currentUser');
-    //     this.router.navigate(['login']);
-    //   }
-    // });
-
     if (user) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
       this.firstname = this.currentUser['firstname'];

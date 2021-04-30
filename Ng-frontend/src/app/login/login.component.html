@@ -2,8 +2,10 @@
   <div fxLayoutAlign="center center" fxFlexFill class="main-div">
     <mat-card fxFlex="25">
       <mat-toolbar color="primary">Login Page</mat-toolbar>
+
       <form fxLayoutAlign="stretch" fxLayout="column" class="login-form" [formGroup]="loginForm"
         (ngSubmit)="loginProcess()">
+       
         <mat-form-field>
           <input matInput type="email" placeholder="Email" formControlName="email">
         </mat-form-field>
@@ -12,14 +14,27 @@
           <input matInput type="password" placeholder="Password" formControlName="password">
         </mat-form-field>
 
+        <mat-form-field appearance="fill">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option *ngFor="let rolename of rolelist" [value]="rolename.value" >
+              {{rolename.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <button mat-raised-button color="primary" type="submit">Login</button>
+
       </form>
     </mat-card>
   </div>
 
   <div fxLayoutAlign="center center">
-    <mat-card fxFlex="25" >
+    <mat-card fxFlex="25">
       <h4> Din't Have Account? <a routerLink="/signup">Signup</a></h4>
     </mat-card>
   </div>
+
+
+
 </div>

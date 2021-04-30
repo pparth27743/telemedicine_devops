@@ -293,10 +293,6 @@ export class HomeComponent implements OnInit {
       this.renderer.appendChild(controlsDiv, disconnectCall);
 
 
-      // // controlsDiv.children[0].addEventListener('click', this.onClickAudioControl);
-      // controlsDiv.children[1].addEventListener('click', this.onClickVideoControl);
-      // controlsDiv.children[2].addEventListener('click', this.onClickDisconnectControl);
-
       videoDisplayDiv.appendChild(controlsDiv);
     }
     videoDisplayDiv.appendChild(innerDiv);

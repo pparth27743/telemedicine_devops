@@ -3,13 +3,14 @@ const pool = require("../database/db");
 module.exports = {
     create: (data, callBack) => {
         pool.query(
-            `insert into ${process.env.MYSQL_DB}.users(firstName, lastName, email, password) 
-                values(?,?,?,?)`,
+            `insert into ${process.env.MYSQL_DB}.users(firstName, lastName, email, password, role) 
+                values(?,?,?,?,?)`,
             [
                 data.firstname,
                 data.lastname,
                 data.email,
                 data.password,
+                data.role
             ],
             (error, results, fields) => {
                 if (error) {
@@ -33,7 +34,7 @@ module.exports = {
     },
     getUserByUserId: (id, callBack) => {
         pool.query(
-            `select id,firstName,lastName,email from ${process.env.MYSQL_DB}.users where id = ?`,
+            `select id,firstName,lastName,email,role from ${process.env.MYSQL_DB}.users where id = ?`,
             [id],
             (error, results, fields) => {
                 if (error) {
@@ -45,7 +46,7 @@ module.exports = {
     },
     getUsers: callBack => {
         pool.query(
-            `select id,firstName,lastName,email from ${process.env.MYSQL_DB}.users`,
+            `select id,firstName,lastName,email,role from ${process.env.MYSQL_DB}.users`,
             [],
             (error, results, fields) => {
                 if (error) {

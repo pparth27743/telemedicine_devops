@@ -13,7 +13,7 @@ export class AuthServiceService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
-  constructor(private http:HttpClient) { 
+  constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -24,19 +24,21 @@ export class AuthServiceService {
     return this.currentUserSubject.value;
   }
 
-  validate():Observable<any> {
+  validate(): Observable<any> {
     return this.http.get(`${baseUrl}users/validate`);
   }
 
-  login(data):Observable<any> {
+  login(data): Observable<any> {
     return this.http.post(`${baseUrl}users/login/`, data)
-    .pipe(map(results => {
-      localStorage.setItem('currentUser', JSON.stringify(results['currentUser']));
-      return results;
-    }));
+      .pipe(map(results => {
+        if (results['success']) {
+          localStorage.setItem('currentUser', JSON.stringify(results['currentUser']))
+        };
+        return results;
+      }));
   }
 
-  signup(data):Observable<any> {
+  signup(data): Observable<any> {
     return this.http.post(`${baseUrl}users/signup`, data);
   }
 
@@ -47,4 +49,3 @@ export class AuthServiceService {
   }
 
 }
-    

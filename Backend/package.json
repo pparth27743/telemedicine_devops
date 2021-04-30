@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --exit"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +20,9 @@
     "uuid": "^8.3.2",
     "@types/socket.io": "^2.1.10",
     "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "mocha": "^8.3.2",
+    "supertest": "^6.1.3"
   }
 }
