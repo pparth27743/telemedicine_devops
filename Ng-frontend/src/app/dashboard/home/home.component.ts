@@ -269,6 +269,8 @@ export class HomeComponent implements OnInit {
         this.el_div_select.nativeElement.disabled = false;
 
         this.socket.close();
+
+        // this.createJoinRoomComponent = !this.createJoinRoomComponent;
       });
 
       innerDiv.addEventListener('mouseover', (mouseOverEvent) => {
@@ -345,6 +347,8 @@ export class HomeComponent implements OnInit {
           this.handleError(error, "createRoom->createRoom Backend call");
         }
       );
+
+    // this.createJoinRoomComponent = !this.createJoinRoomComponent;
   }
 
   async joinRoom() {
@@ -372,6 +376,7 @@ export class HomeComponent implements OnInit {
         }
       )
 
+    // this.createJoinRoomComponent = !this.createJoinRoomComponent;
   }
 
   async setRemoteStream(track, peerId) {
