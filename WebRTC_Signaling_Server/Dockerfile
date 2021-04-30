@@ -1,12 +1,9 @@
 # Base image
-FROM node:14-alpine
+FROM node:14.15-alpine
 
-# Copying angular folder from local directory to Educative directory
-WORKDIR /webrtc-server
-COPY ./WebRTC_Signaling_Server/ ./
+WORKDIR /webrtc_server
+COPY . .
 
-
-# Installing Angular cli and node modules in angular directory
 RUN     npm i
 CMD [ "npm", "start" ]
 

@@ -6,7 +6,8 @@ const httpServer = require("http").createServer(app);
 
 const io = require("socket.io")(httpServer, {
     cors: {
-        origin: "https://localhost:4200",
+        // origin: ["http://192.168.0.106:4200", "http://localhost:4200"],
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });
@@ -23,8 +24,8 @@ app.get('/clientId', (req, res) => {
 });
 
 app.get('/createRoom', (req, res) => {
-    let newUUID = uuidv4();
-    // let newUUID = '123';
+    // let newUUID = uuidv4();
+    let newUUID = '123';
     return res.json({
         'room-id': newUUID
     });

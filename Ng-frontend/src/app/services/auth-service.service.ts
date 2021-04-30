@@ -29,7 +29,7 @@ export class AuthServiceService {
   }
 
   login(data):Observable<any> {
-    return this.http.post(`${baseUrl}users/login`, data)
+    return this.http.post(`${baseUrl}users/login/`, data)
     .pipe(map(results => {
       localStorage.setItem('currentUser', JSON.stringify(results['currentUser']));
       return results;

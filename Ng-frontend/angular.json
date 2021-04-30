@@ -66,7 +66,7 @@
             "browserTarget": "Ng-frontend:build",
             "sslKey": "./encryption/key.pem",
             "sslCert": "./encryption/cert.pem",
-            "ssl": true
+            "ssl": false
           },
           "configurations": {
             "production": {

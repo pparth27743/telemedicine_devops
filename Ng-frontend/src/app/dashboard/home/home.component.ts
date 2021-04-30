@@ -1,9 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { webrtcServerUrl } from 'src/environments/environment';
 
 
-const webrtcServerUrl = "http://localhost:4440";
+// const webrtcServerUrl = "http://localhost:4440";
+// const webrtcServerUrl = "http://192.168.0.106:4440";
+
 
 const mediaConstraints = {
   audio: {

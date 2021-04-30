@@ -11,6 +11,26 @@ app.use(express.json());
 app.use("/api/users", userRouter);
 
 
+// require("dotenv").config();
+// const express = require('express');
+// const cors = require('cors');
+// const app = express();
+
+// const userRouter = require("./users/user.router");
+
+// app.use(cors());  
+// app.use(express.json());
+// app.use("/api/users", userRouter);
+
+
+// let fs = require('fs');
+// const options = {
+//     key: fs.readFileSync('encryption/key.pem'),
+//     cert: fs.readFileSync('encryption/cert.pem')
+// };
+// const https = require('https').createServer(options, app);
+
+
 const mysql = require('mysql');
 const con = mysql.createConnection({
   host: process.env.DB_HOST,
