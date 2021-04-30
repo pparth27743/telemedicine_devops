@@ -24,8 +24,8 @@ app.get('/clientId', (req, res) => {
 });
 
 app.get('/createRoom', (req, res) => {
-    // let newUUID = uuidv4();
-    let newUUID = '123';
+    let newUUID = uuidv4();
+    // let newUUID = '123';
     return res.json({
         'room-id': newUUID
     });
