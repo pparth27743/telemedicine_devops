@@ -1,2 +1,0 @@
-FROM nginx:1.17.1-alpine
-COPY ./dist/Ng-frontend /usr/share/nginx/html
