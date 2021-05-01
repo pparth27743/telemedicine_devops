@@ -2,10 +2,6 @@
 - name: Pull and Run docker image of pparth27743/telemedicine_frontend
   hosts: all
   tasks:
-    - name: Pull pparth27743/hello_world
-      docker_image:
-        name: pparth27743/telemedicine_frontend
-        source: pull
     - name: Docker compose
-      ansible.builtin.shell:
+      shell:
         cmd: touch /home/parth/Desktop/abc.txt
