@@ -1,7 +1,12 @@
 ---
-- name: Pull and Run docker image of pparth27743/telemedicine_frontend
+- name: Spin up application at remote machine
   hosts: all
   tasks:
-    - name: Docker compose
+    - name: Copy docker-compose.yml file to remote machine
+      copy: 
+        src:  docker-compose.yml 
+        dest: /tmp/
+      
+    - name: spin up application using docker-compose 
       shell:
-        cmd: cd ansible_deployment && docker-compose up -d  && cd ..
+        cmd: cd /tmp/ && docker-compose up -d  
