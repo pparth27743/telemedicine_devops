@@ -16,14 +16,20 @@ pipeline {
         }
         stage('Install dependancies') {
             steps {
-                sh 'cd Backend/ && npm i && cd ..'
-                sh 'cd Ng-frontend/ && npm i && cd ..'
-                sh 'cd WebRTC_Signaling_Server/ && npm i && cd ..'
+                sh 'cd Backend/ && npm i'
+                sh 'cd Ng-frontend/ && npm i'
+                sh 'cd WebRTC_Signaling_Server/ && npm i'
             } 
+        }
+        stage('Test') {
+            steps {
+                sh 'cd Backend/ && cp .env_test .env && npm test'
+            }
         }
         stage('Build') {
             steps {
-                sh 'cd Ng-frontend/ && ng build && cd ..'
+                sh 'cd Backend/ && cp .env_deploy .env' 
+                sh 'cd Ng-frontend/ && ng build'
             }
         }
         stage('Remove Previous Docker Images If Exists') {
