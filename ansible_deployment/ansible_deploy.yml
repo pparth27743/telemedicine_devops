@@ -4,5 +4,4 @@
   tasks:
     - name: Docker compose
       shell:
-        cmd: cd /home/parth/Desktop
-        cmd: touch pppp
+        cmd: cd ansible_deployment && docker-compose up -d  && cd ..
