@@ -8,6 +8,7 @@ pipeline {
     agent any
 
     stages {
+    
         stage('Git Clone') {
             steps {
                 git branch: 'main', url: 'https://github.com/pparth27743/telemedicine'
@@ -47,20 +48,18 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry( '', registryCredential ) {
-                       sh 'docker push pparth27743/telemedicine_webrtc_server'
-                       sh 'docker push pparth27743/telemedicine_frontend'
-                       sh 'docker push pparth27743/telemedicine_backend'
+                      sh 'docker push pparth27743/telemedicine_webrtc_server'
+                      sh 'docker push pparth27743/telemedicine_frontend'
+                      sh 'docker push pparth27743/telemedicine_backend'
                     }
                 }
             }
         }
-        
-        
-        // stage('Deploy with ansible') {
-        //     steps {
-        //         ansiblePlaybook becomeUser: null, colorized: true, disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventory', playbook: 'deploy.yml', sudoUser: null
-        //     }
-        // }
+        stage('Deploy with ansible') {
+            steps {
+                ansiblePlaybook becomeUser: null, colorized: true, disableHostKeyChecking: true, installation: 'Ansible', inventory: './ansible_deployment/ansible_inventory', playbook: './ansible_deployment/ansible_deploy.yml', sudoUser: null
+            }
+        }
         
 
     }
