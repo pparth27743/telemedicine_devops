@@ -1,0 +1,69 @@
+pipeline {
+    
+    environment {
+        registryCredential = 'dockerhub_id'
+    }
+
+ 
+    agent any
+
+    stages {
+        stage('Git Clone') {
+            steps {
+                git branch: 'main', url: 'https://github.com/pparth27743/telemedicine'
+            }
+        }
+        stage('Install dependancies') {
+            steps {
+                sh 'cd Backend/ && npm i && cd ..'
+                sh 'cd Ng-frontend/ && npm i && cd ..'
+                sh 'cd WebRTC_Signaling_Server/ && npm i && cd ..'
+            } 
+        }
+        stage('Build') {
+            steps {
+                sh 'cd Ng-frontend/ && ng build && cd ..'
+            }
+        }
+        stage('Remove Previous Docker Images If Exists') {
+            steps {
+                sh 'docker rmi telemedicine_webrtc_server  telemedicine_frontend  telemedicine_backend 2> /dev/null || true'
+                sh 'docker rmi pparth27743/telemedicine_webrtc_server  pparth27743/telemedicine_frontend  pparth27743/telemedicine_backend 2> /dev/null || true'
+            }
+        }
+        stage('Docker containerization') {
+            steps {
+                sh 'docker-compose build'
+            }
+        }
+        stage('Rename Docke Image name to push on Docker Hub') {
+            steps {
+                sh 'docker tag telemedicine_webrtc_server pparth27743/telemedicine_webrtc_server'
+                sh 'docker tag telemedicine_frontend pparth27743/telemedicine_frontend'
+                sh 'docker tag telemedicine_backend pparth27743/telemedicine_backend'
+            }
+        }
+        stage('Deploy on Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                       sh 'docker push pparth27743/telemedicine_webrtc_server'
+                       sh 'docker push pparth27743/telemedicine_frontend'
+                       sh 'docker push pparth27743/telemedicine_backend'
+                    }
+                }
+            }
+        }
+        
+        
+        // stage('Deploy with ansible') {
+        //     steps {
+        //         ansiblePlaybook becomeUser: null, colorized: true, disableHostKeyChecking: true, installation: 'Ansible', inventory: 'inventory', playbook: 'deploy.yml', sudoUser: null
+        //     }
+        // }
+        
+
+    }
+}
+
+     
