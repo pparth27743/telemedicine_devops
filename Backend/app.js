@@ -44,7 +44,7 @@ const con = mysql.createConnection({
 // Create database and table if not exists.
 con.connect(function (err) {
   if (err) throw err;
-  
+
   con.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQL_DB}\``, function (err, result) {
     if (err) throw err;
 
