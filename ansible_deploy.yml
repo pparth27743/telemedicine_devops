@@ -1,0 +1,9 @@
+---
+- name: Pull and Run docker image of pparth27743/hello_world
+  hosts: all
+  # tasks:
+  #   - name: Pull pparth27743/hello_world
+  #     docker_image:
+  #       name: pparth27743/hello_world
+  #       source: pull
+  
