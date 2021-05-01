@@ -65,7 +65,7 @@ con.connect(function (err) {
 
 const port = process.env.APP_PORT || 3000;
 app.listen(port, () => {
-  logger.info(`Backend up and running on PORT : ${port}`);
+  console.log(`Backend up and running on PORT : ${port}`);
 });
 
 
