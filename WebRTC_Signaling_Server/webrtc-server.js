@@ -17,12 +17,6 @@ const uniqid = require('uniqid');
 
 
 // routes
-app.get('/clientId', (req, res) => {
-    return res.json({
-        'client-id': uniqid('cli-')
-    });
-});
-
 app.get('/createRoom', (req, res) => {
     // let newUUID = uuidv4();
     let newUUID = '123';
@@ -54,7 +48,7 @@ io.on('connect', (socket) => {
     console.log(`Socket ${socket.id} has connected`);
 
     socket.on('join', (data) => {
-        if (io.sockets.adapter.rooms.has(data['room-id']) === true) {
+        if(io.sockets.adapter.rooms.has(data['room-id']) === true) {
             socket.join(data['room-id']);
             socket.broadcast.in(data['room-id']).emit('room-joined', data);
         }
@@ -64,22 +58,25 @@ io.on('connect', (socket) => {
     });
 
     socket.on('send-metadata', (data) => {
-        socket.broadcast.in(data['room-id']).emit('send-metadata', data);
+        socket.to(data['peer-id']).emit('send-metadata', data);
     });
 
     socket.on('ice-candidate', (data) => {
-        socket.broadcast.in(data['room-id']).emit('ice-candidate', data);
+        socket.to(data['peer-id']).emit('ice-candidate', data);
     });
 
     socket.on('offer', (data) => {
-        socket.broadcast.in(data['room-id']).emit('offer', data);
+        socket.to(data['peer-id']).emit('offer', data);
     });
 
     socket.on('answer', (data) => {
-        socket.broadcast.in(data['room-id']).emit('answer', data);
+        socket.to(data['peer-id']).emit('answer', data);
+    });
+
+    socket.on('disconnect', (reason) => {
+        socket.broadcast.emit('client-disconnected', { 'client-id': socket.id });
     });
 });
-
 
 
 // run http server

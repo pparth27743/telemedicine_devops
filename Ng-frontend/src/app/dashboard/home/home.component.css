@@ -1,4 +1,4 @@
-.room-id-text {
+.roomid {
     background-color: #d3d3d363;
     height: 100%;
     font-size: 1.25em;
@@ -6,14 +6,32 @@
     padding-top: 5px;
 }
 
-.or-div {
-    text-align: center;
-    float: left;
-    margin-top: 4px;
-    width: 6%;
+video {
+    width: 350px;
+    height: 262px;
+    object-fit: cover;
+    background-color: black;
 }
 
-.hr-div {
-    float: left;
-    width: 47%;
+video.transformX {
+    transform: scaleX(-1);
+}
+
+.controls {
+    text-align: center;
+    display: none;
+    z-index: 1;
+    position: absolute;
+    background-color: #29212184;
+    color: #ffffff;
+    width: 350px;
+    font-size: 40px;
+}
+
+.controls i {
+    cursor: pointer;
+}
+
+.redcontrol {
+    color: orangered;
 }
