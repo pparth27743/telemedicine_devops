@@ -476,7 +476,6 @@ export class HomeComponent implements OnInit {
       videoElement = this.getVideoElement(videoMetaData, constraints);
       videoElement.srcObject = trackEvent.streams[0];
     }
-    console.log(this.ListHTMLElements);
   }
 
   gatherIceCandidates(iceCandidate, peerId) {
