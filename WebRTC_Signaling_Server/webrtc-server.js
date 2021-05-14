@@ -66,7 +66,9 @@ app.get('/createNamespace', (req, res) => {
 app.get('/removeNamespace', (req, res) => {
     let namespace_id = req.query['namespace_id'];
     delete namespaces[namespace_id];
+    console.log(io._nsps.has(`/${namespace_id}`));
     io._nsps.delete(`/${namespace_id}`);
+    console.log(io._nsps.has(`/${namespace_id}`));
     return res.json({
         'status': 200,
         'msg': 'Namespace removed successfully'

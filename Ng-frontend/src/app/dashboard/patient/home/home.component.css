@@ -1,0 +1,37 @@
+.roomid {
+    background-color: #d3d3d363;
+    height: 100%;
+    font-size: 1.25em;
+    font-weight: bold;
+    padding-top: 5px;
+}
+
+video {
+    width: 350px;
+    height: 262px;
+    object-fit: cover;
+    background-color: black;
+}
+
+video.transformX {
+    transform: scaleX(-1);
+}
+
+.controls {
+    text-align: center;
+    display: none;
+    z-index: 1;
+    position: absolute;
+    background-color: #29212184;
+    color: #ffffff;
+    width: 350px;
+    font-size: 40px;
+}
+
+.controls i {
+    cursor: pointer;
+}
+
+.redcontrol {
+    color: orangered;
+}

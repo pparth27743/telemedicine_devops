@@ -8,7 +8,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   // {
-  //   path: 'dashboard',
+  //   path: 'dashboard/doctor/home',
   //   loadChildren: () => import('./dashboard/dashboard.module').then(mod => mod.DashboardModule)
   // }
 ];

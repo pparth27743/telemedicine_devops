@@ -54,7 +54,6 @@ export class HomeComponent implements OnInit {
   newStream_videoEnabled = false;  
 
   ListHTMLElements = {};
-  // namespace_id;
 
   @ViewChild('clientname_text') el_clientname_text;
   @ViewChild('audio_input_source') el_audio_input_source;
@@ -568,7 +567,7 @@ export class HomeComponent implements OnInit {
 
   // Socket Functions
   setupSocket() {
-    this.socket = io(webrtcServerUrl);
+    this.socket = io(`${webrtcServerUrl}`);
 
     this.socket.on('connect', () => { this.onConnect() });
     this.socket.on('room-joined', (data) => { this.onRoomJoined(data) });
@@ -655,30 +654,6 @@ export class HomeComponent implements OnInit {
     console.error(`An Error Occurred from : ${from} :: `, error);
   }
 
-
-  // create NameSpace
-  createNamespace(namespace_id){
-    this.http.get(`${webrtcServerUrl}/createNamespace?namespace_id=${namespace_id}`)
-    .subscribe(
-      async data => {
-        if (data['status'] === 200) {
-          // close spinner
-        }
-        else {
-          this.handleError(data['error'], "createNamespace->if else");
-        }
-      },
-      error => {
-        this.handleError(error, "createNamespace");
-      }
-    )
-  }
-
-  ngOnInit(): void {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if(currentUser['role'] === 'Doctor'){
-      this.createNamespace(currentUser['namespace_id']);
-    }
-   }
+  ngOnInit(): void { }
 
 }

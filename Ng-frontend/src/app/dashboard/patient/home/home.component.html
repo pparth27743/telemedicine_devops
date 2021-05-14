@@ -1,0 +1,81 @@
+<h1>Patient Home</h1>
+<div class="container mt-4" #CreateJoinRoom>
+    <section #sec_details id="sec-details">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <input #clientname_text type="text" class="form-control" id="clientname-text" placeholder="Enter a Username">
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-7 text-center">
+          <div class="form-group">
+            <input #join_room_text class="form-control" id="join-room-text" type="text" placeholder="Enter the Room Id">
+          </div>
+        </div>
+        <div class="col-md-2 text-center">
+          <button #btn_join_room id="btn-join-room" class="btn btn-warning" (click)="joinRoom()">Join Room</button>
+        </div>
+  
+        <div class="col-md-1 text-center pt-2">
+          <strong class="">OR</strong>
+        </div>
+        <div class="col-md-2 text-center">
+          <button #btn_create_room id="btn-create-room" class="btn btn-success" (click)="createRoom()">Create
+            Room</button>
+        </div>
+      </div>
+    </section>
+    
+    <hr>
+  
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title" id="selectTracksModalTitle">Stream Tracks</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox"  [(ngModel)]="newStream_audioEnabled" id="audio-check" value="audio">
+          <label class="form-check-label" for="audio-check">Audio Track</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" [(ngModel)]="newStream_videoEnabled" id="video-check"  value="video">
+          <label class="form-check-label" for="video-check">Video Track</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="addStream()"  (click)="modal.close()" data-dismiss="modal">Add Tracks</button>
+      </div>
+    </ng-template>
+  
+    <section #sec_controls id="sec-controls" style="display: none">
+      <div class="row mt-1">
+        <div class="col-md-6 text-center">
+          <div #room_id id="room-id" class="roomid">
+            xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          </div>
+        </div>
+        <div class="col-md-3 text-center">
+          <button class="btn btn-lg btn-outline-primary" (click)="open(content)">New Stream</button>
+        </div>
+        <div class="col-md-3 text-center">
+          <button #btn_end_call id="btn-end-call" class="btn btn-danger" (click)="endCall()">End Call</button>
+        </div>
+      </div>
+      <hr>
+    </section>
+    <div #local_video_display id="local-video-display" class="row mt-3">
+  
+    </div>
+    <div #remote_video_display id="remote-video-display" class="row mt-5">
+  
+    </div>
+  
+  </div>
+  

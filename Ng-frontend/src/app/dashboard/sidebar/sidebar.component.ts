@@ -21,4 +21,13 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getHomeLink(){
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if(currentUser['role'] === 'Doctor'){
+      return '/dashboard/doctor/home';
+    }else{
+      return '/dashboard/patient/home';
+    }
+  }
+  
 }
