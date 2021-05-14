@@ -2,7 +2,7 @@
 - name: Spin up application at remote machine
   hosts: all
   tasks:
-    - name: Shutdown ruuning application  
+    - name: Shutdown ruuning application If they are running
       shell:
         cmd: cd  /tmp/ && docker-compose down || true
   
