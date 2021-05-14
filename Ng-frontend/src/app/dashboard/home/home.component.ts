@@ -386,6 +386,7 @@ export class HomeComponent implements OnInit {
     this.instances = 0;
     this.socket.close();
     this.socket = null;
+    this.ListHTMLElements = {};
   }
 
   async setLocalMedia(audioEnabled = true, videoEnabled = true) {
