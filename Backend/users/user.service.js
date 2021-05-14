@@ -1,16 +1,37 @@
 const pool = require("../database/db");
+const { nanoid } = require('nanoid');
 
 module.exports = {
     create: (data, callBack) => {
-        pool.query(
-            `insert into ${process.env.MYSQL_DB}.users(firstName, lastName, email, password, role) 
-                values(?,?,?,?,?)`,
+        if(data.role === 'Doctor'){
+            let namespace_id = nanoid(16);
+            pool.query(
+                    `insert into ${process.env.MYSQL_DB}.\`user_doctor\`(firstName, lastName, email, password, namespace_id, specialization) 
+                        values(?,?,?,?,?,?)`,
+                    [
+                        data.firstname,
+                        data.lastname,
+                        data.email,
+                        data.password,
+                        namespace_id,
+                        data.specialization
+                    ],
+                    (error, results, fields) => {
+                        if (error) {
+                            callBack(error);
+                        }
+                        return callBack(null, results);
+                    }
+                );
+        }else{
+             pool.query(
+            `insert into ${process.env.MYSQL_DB}.\`user_patient\`(firstName, lastName, email, password) 
+                values(?,?,?,?)`,
             [
                 data.firstname,
                 data.lastname,
                 data.email,
-                data.password,
-                data.role
+                data.password
             ],
             (error, results, fields) => {
                 if (error) {
@@ -19,18 +40,32 @@ module.exports = {
                 return callBack(null, results);
             }
         );
+        }
     },
-    getUserByUserEmail: async (email, callBack) => {
-        pool.query(
-            `select * from ${process.env.MYSQL_DB}.users where email = ?`,
-            [email],
-            (error, results, fields) => {
-                if (error) {
-                    callBack(error);
+    getUserByUserEmail: async (data, callBack) => {
+        if(data.role === "Doctor"){
+            pool.query(
+                `select * from ${process.env.MYSQL_DB}.\`user_doctor\` where email = ?`,
+                [data.email],
+                (error, results, fields) => {
+                    if (error) {
+                        callBack(error);
+                    }
+                    return callBack(null, results[0]);
                 }
-                return callBack(null, results[0]);
-            }
-        );
+            );
+        }else{
+            pool.query(
+                `select * from ${process.env.MYSQL_DB}.\`user_patient\` where email = ?`,
+                [data.email],
+                (error, results, fields) => {
+                    if (error) {
+                        callBack(error);
+                    }
+                    return callBack(null, results[0]);
+                }
+            );
+        }
     },
     getUserByUserId: (id, callBack) => {
         pool.query(

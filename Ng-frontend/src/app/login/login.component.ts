@@ -11,10 +11,10 @@ import { AuthServiceService } from '../services/auth-service.service';
 export class LoginComponent implements OnInit {
 
     rolelist = [
-        { value: 'doctor', viewValue: 'Doctor' },
-        { value: 'paramedical', viewValue: 'Paramedical' },
-    ];
-
+        { value: 'Doctor', viewValue: 'Doctor' },
+        { value: 'Patient', viewValue: 'Patient' },
+      ];
+    
     loginForm: FormGroup;
 
     constructor(private authService: AuthServiceService, private router: Router) {

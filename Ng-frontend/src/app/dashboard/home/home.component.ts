@@ -4,11 +4,6 @@ import { io, Socket } from 'socket.io-client';
 import { webrtcServerUrl } from 'src/environments/environment';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
-
-// const webrtcServerUrl = "http://localhost:4440";
-// const webrtcServerUrl = "http://192.168.0.106:4440";
-
-
 const mediaConstraints = {
   audio: {
     echoCancellation: true
@@ -44,7 +39,6 @@ const iceServers = {
 })
 export class HomeComponent implements OnInit {
 
-
   socket: Socket;
   clientName;
   localStreams = [];
@@ -60,6 +54,7 @@ export class HomeComponent implements OnInit {
   newStream_videoEnabled = false;  
 
   ListHTMLElements = {};
+  // namespace_id;
 
   @ViewChild('clientname_text') el_clientname_text;
   @ViewChild('audio_input_source') el_audio_input_source;
@@ -660,6 +655,30 @@ export class HomeComponent implements OnInit {
     console.error(`An Error Occurred from : ${from} :: `, error);
   }
 
-  ngOnInit(): void { }
+
+  // create NameSpace
+  createNamespace(namespace_id){
+    this.http.get(`${webrtcServerUrl}/createNamespace?namespace_id=${namespace_id}`)
+    .subscribe(
+      async data => {
+        if (data['status'] === 200) {
+          // close spinner
+        }
+        else {
+          this.handleError(data['error'], "createNamespace->if else");
+        }
+      },
+      error => {
+        this.handleError(error, "createNamespace");
+      }
+    )
+  }
+
+  ngOnInit(): void {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if(currentUser['role'] === 'Doctor'){
+      this.createNamespace(currentUser['namespace_id']);
+    }
+   }
 
 }

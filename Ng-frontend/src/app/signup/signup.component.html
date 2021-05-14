@@ -23,13 +23,21 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Role</mat-label>
-          <mat-select  formControlName="role" >
+          <mat-select #roleSelect formControlName="role" (selectionChange)="onChangeRole(roleSelect.value)">
             <mat-option *ngFor="let rolename of rolelist" [value]="rolename.value">
               {{rolename.viewValue}}
             </mat-option>
           </mat-select>
+        </mat-form-field> 
+        
+        <mat-form-field appearance="fill" *ngIf="roleSelect.value === 'Doctor'">
+          <mat-label>Specialization</mat-label>
+          <mat-select formControlName="specialization">
+            <mat-option *ngFor="let specialization of specializations" [value]="specialization.value">
+              {{specialization.viewValue}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
-
 
         <button mat-raised-button color="primary" type="submit">Sign Up</button>
       </form>

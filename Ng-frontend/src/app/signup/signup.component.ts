@@ -11,10 +11,20 @@ import { AuthServiceService } from '../services/auth-service.service';
 export class SignupComponent implements OnInit {
 
   rolelist = [
-    { value: 'doctor', viewValue: 'Doctor' },
-    { value: 'paramedical', viewValue: 'Paramedical' },
+    { value: 'Doctor', viewValue: 'Doctor' },
+    { value: 'Patient', viewValue: 'Patient' },
   ];
 
+  specializations = [
+    { value: 'Cardiologist', viewValue: 'Cardiologist' },
+    { value: 'Dermatologist', viewValue: 'Dermatologist' },
+    { value: 'General Medicine (MD)', viewValue: 'General Medicine (MD)' },
+    { value: 'Dentist', viewValue: 'Dentist' },
+    { value: 'Gynecologist', viewValue: 'Gynecologist' },
+    { value: 'Neurologist', viewValue: 'Neurologist' },
+    { value: 'Physiotherapist', viewValue: 'Physiotherapist' },
+    { value: 'Orthopedic', viewValue: 'Orthopedic' },
+  ]
 
   signUpForm: FormGroup;
 
@@ -23,6 +33,14 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
   }
+
+  onChangeRole(role){
+    if(role === 'Doctor'){
+      this.signUpForm.addControl("specialization", new FormControl("", Validators.required));
+    }else{
+      this.signUpForm.removeControl("specialization");
+    }
+  } 
 
   initForm() {
     this.signUpForm = new FormGroup({
