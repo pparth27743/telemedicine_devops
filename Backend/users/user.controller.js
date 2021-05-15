@@ -1,8 +1,6 @@
 const {
     create,
     getUserByUserEmail,
-    getUserByUserId,
-    getUsers,
     updateUser,
     deleteUser,
     getDoctorsBySpecialization
@@ -101,39 +99,6 @@ module.exports = {
                     data: results,
                 });
             } 
-        });
-    },
-    getUserByUserId: (req, res) => {
-        const id = req.params.id;
-        getUserByUserId(id, (err, results) => {
-            if (err) {
-                logger.error(err);
-                return;
-            }
-            if (!results) {
-                logger.warn("Record not Found");
-                return res.json({
-                    success: 0,
-                    message: "Record not Found"
-                });
-            }
-            results.password = undefined;
-            return res.json({
-                success: 1,
-                data: results
-            });
-        });
-    },
-    getUsers: (req, res) => {
-        getUsers((err, results) => {
-            if (err) {
-                logger.error(err);
-                return;
-            }
-            return res.json({
-                success: 1,
-                data: results
-            });
         });
     },
     updateUsers: (req, res) => {

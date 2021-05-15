@@ -5,3 +5,27 @@
 2021-05-15 12:16:05[app.js] info: "login successfully"
 2021-05-15 12:18:03[app.js] info: "Signup Successfully."
 2021-05-15 12:18:15[app.js] info: "login successfully"
+2021-05-15 12:31:54[app.js] info: "Signup Successfully."
+2021-05-15 12:31:54[app.js] info: "Signup Successfully."
+2021-05-15 12:31:54[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:31:54[app.js] info: "Database connection errror or Email already exits."
+2021-05-15 12:31:54[app.js] warn: "No such user exist"
+2021-05-15 12:31:54[app.js] info: "No such user exist"
+2021-05-15 12:31:54[app.js] info: "login successfully"
+2021-05-15 12:31:54[app.js] info: "login successfully"
+2021-05-15 12:32:43[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:32:43[app.js] error: null
+2021-05-15 12:33:17[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:33:17[app.js] error: null
+2021-05-15 12:34:04[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:34:04[app.js] error: null
+2021-05-15 12:35:18[app.js] info: "login successfully"
+2021-05-15 12:35:53[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:35:53[app.js] error: null
+2021-05-15 12:36:38[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:36:38[app.js] error: null
+2021-05-15 12:37:48[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:38:27[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:38:59[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:39:38[app.js] error: "ER_DUP_ENTRY: Duplicate entry 'email@gmail.com' for key 'user_patient.email_UNIQUE'"
+2021-05-15 12:39:38[app.js] error: null

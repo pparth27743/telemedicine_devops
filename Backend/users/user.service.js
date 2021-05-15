@@ -3,6 +3,7 @@ const { nanoid } = require('nanoid');
 
 module.exports = {
     create: (data, callBack) => {
+        ``
         if (data.role === 'Doctor') {
             let namespace_id = nanoid(16);
             pool.query(
@@ -67,18 +68,6 @@ module.exports = {
             );
         }
     },
-    getUserByUserId: (id, callBack) => {
-        pool.query(
-            `select id,firstName,lastName,email,role from ${process.env.MYSQL_DB}.users where id = ?`,
-            [id],
-            (error, results, fields) => {
-                if (error) {
-                    callBack(error);
-                }
-                return callBack(null, results[0]);
-            }
-        );
-    },
     getDoctorsBySpecialization: (specialization, callBack) => {
         pool.query(
             `select id, firstName, lastName, namespace_id from ${process.env.MYSQL_DB}.user_doctor where specialization = ?`,
@@ -104,8 +93,6 @@ module.exports = {
         );
     },
     updateUser: (data, callBack) => {
-        console.log(data);
-
         // If user is doctor
         if (data.role === 'Doctor') {
             // If password also needs to be changed.
@@ -146,7 +133,7 @@ module.exports = {
                     }
                 );
             }
-        } 
+        }
         else {   // If user is patient
             // If password also needs to be changed.
             if (data.password) {
@@ -188,15 +175,29 @@ module.exports = {
 
     },
     deleteUser: (data, callBack) => {
-        pool.query(
-            `delete from ${process.env.MYSQL_DB}.users where id = ?`,
-            [data.id],
-            (error, results, fields) => {
-                if (error) {
-                    callBack(error);
+        if (data.role === 'Doctor') {
+            pool.query(
+                `delete from ${process.env.MYSQL_DB}.user_doctor where id = ?`,
+                [data.id],
+                (error, results, fields) => {
+                    if (error) {
+                        callBack(error);
+                    }
+                    return callBack(null, results);
                 }
-                return callBack(null, results);
-            }
-        );
+            );
+        }
+        else {
+            pool.query(
+                `delete from ${process.env.MYSQL_DB}.user_patient where id = ?`,
+                [data.id],
+                (error, results, fields) => {
+                    if (error) {
+                        callBack(error);
+                    }
+                    return callBack(null, results);
+                }
+            );
+        }
     }
 };
