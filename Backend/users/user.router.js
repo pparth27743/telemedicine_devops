@@ -7,7 +7,8 @@ const {
     deleteUser,
     validateUser,
     getDoctors,
-    addToWaitList
+    addToWaitList,
+    getWaitingPatients
 } = require("./user.controller");
 
 
@@ -17,6 +18,8 @@ router.post("/login", login);
 router.post("/signup", createUser);
 router.post("/getdoctors", getDoctors);
 router.post("/addtowaitlist", addToWaitList);
+router.post("/getwaitingpatients", getWaitingPatients);
+
 
 
 router.patch("/", checkToken, updateUsers);

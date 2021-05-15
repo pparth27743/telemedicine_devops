@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 import { webrtcServerUrl } from 'src/environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { WebrtcService } from 'src/app/services/webrtc.service';
+import { UsersService } from 'src/app/services/users.service';
 
 const mediaConstraints = {
   audio: {
@@ -56,6 +57,8 @@ export class HomeComponent implements OnInit {
 
   ListHTMLElements = {};
 
+  listOfPatient = [];
+
   @ViewChild('clientname_text') el_clientname_text;
   @ViewChild('audio_input_source') el_audio_input_source;
   @ViewChild('video_input_source') el_video_input_source;
@@ -71,10 +74,17 @@ export class HomeComponent implements OnInit {
   @ViewChild('local_video_display') el_local_video_display;
   @ViewChild('remote_video_display') el_remote_video_display;
 
-  constructor(private webrtcService: WebrtcService, private renderer: Renderer2, private modalService: NgbModal) { }
+  constructor(private webrtcService: WebrtcService, private renderer: Renderer2, private modalService: NgbModal, private usersService: UsersService) { }
 
   ngOnInit(): void {
     this.setupSocket();
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.usersService.getWaitingPatients(currentUser['id']).subscribe(res => {
+        res['data'].forEach(patient => {
+          const name = patient.firstname + ' ' + (patient.lastname ? patient.lastname : '');
+          this.listOfPatient.push({ value: patient.roomid, viewValue: name });
+      });
+    });
   }
 
   open(content) {
@@ -579,7 +589,7 @@ export class HomeComponent implements OnInit {
     this.socket.on('offer', (data) => { this.onOffer(data) });
     this.socket.on('answer', (data) => { this.onAnswer(data) });
     this.socket.on('client-disconnected', (data) => { this.onClientDisconnected(data) });
-    this.socket.on('new-patient', (data) => { this.onNewPatient(data) });
+    this.socket.on('new-patient',   (data) => { this.onNewPatient(data) });
   }
 
   onNewPatient(data){

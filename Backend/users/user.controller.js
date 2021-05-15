@@ -4,7 +4,8 @@ const {
     updateUser,
     deleteUser,
     getDoctorsBySpecialization,
-    addToWaitListService
+    addToWaitListService,
+    getWaitingPatientsService
 } = require("./user.service");
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -106,11 +107,35 @@ module.exports = {
         addToWaitListService(req.body, (err, results) => {
             if (err) {
                 logger.error(err);
+                return res.json({
+                    success: 0,
+                    message: "not able to add patient to waitlist",
+                    error: err['sqlMessage']
+                });
             }
             if (results) {
                 return res.json({
                     success: 1,
                     message: "added patient to waitlist",
+                    data: results,
+                });
+            } 
+        });
+    },
+    getWaitingPatients : (req, res) => {
+        getWaitingPatientsService(req.body, (err, results) => {
+            if (err) {
+                logger.error(err);
+                return res.json({
+                    success: 0,
+                    message: "not able to get  waitlist of patient",
+                    error: err['sqlMessage']
+                });
+            }
+            if (results) {
+                return res.json({
+                    success: 1,
+                    message: "got waitlist of patients",
                     data: results,
                 });
             } 

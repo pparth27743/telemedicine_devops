@@ -1,5 +1,5 @@
 <div class="container mt-4" #CreateJoinRoom>
-  <section #sec_details id="sec-details">
+  <!-- <section #sec_details id="sec-details">
     <div class="row">
       <div class="col-md-12">
         <div class="form-group">
@@ -27,8 +27,28 @@
       </div>
     </div>
   </section>
+   -->
   
-  <hr>
+  
+   <div class="row">
+    <div class="col-md-12 text-center">
+      <mat-form-field appearance="fill">
+        <mat-label>Patient</mat-label>
+        <mat-select #patientSelect>
+          <mat-option *ngFor="let patient of listOfPatient" [value]="patient.value">
+            <div>
+              <p>Patient Name : {{patient.viewValue}}</p>
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- {{patient.viewValue}} -->
+
+   <hr>
 
   <ng-template #content let-modal>
     <div class="modal-header">

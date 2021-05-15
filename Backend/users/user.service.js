@@ -97,6 +97,18 @@ module.exports = {
             }
         );
     },
+    getWaitingPatientsService: (data, callBack) => {
+        pool.query(
+            `SELECT PC.id, PC.roomid, PC.patient_id, UP.firstname, UP.lastname FROM ${process.env.MYSQL_DB}.user_patient as UP, ${process.env.MYSQL_DB}.pending_calls as PC where UP.id = PC.patient_id and doctor_id = ?`,
+            [data.doctor_id],
+            (error, results, fields) => {
+                if (error) {
+                    callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
     getUsers: callBack => {
         pool.query(
             `select id,firstName,lastName,email,role from ${process.env.MYSQL_DB}.users`,
