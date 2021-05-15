@@ -9,7 +9,7 @@ export class WebrtcService {
 
   constructor(private http: HttpClient) { }
 
-  createRoom() {
+ createRoom() {
     return this.http.get(`${webrtcServerUrl}/createRoom`);
   }
 
@@ -23,6 +23,10 @@ export class WebrtcService {
 
   removeNamespace(namespace_id) {
     return this.http.get(`${webrtcServerUrl}/removeNamespace?namespace_id=${namespace_id}`);
+  }
+
+  chekckAvailabilityOfDoctor(namespace_id){
+      return this.http.get(`${webrtcServerUrl}/checkAvailability?namespace_id=${namespace_id}`);
   }
 
 }

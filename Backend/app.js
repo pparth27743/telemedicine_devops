@@ -63,14 +63,16 @@ con.connect(function (err) {
   stmt = `CREATE TABLE IF NOT EXISTS \`${process.env.MYSQL_DB}\`.\`pending_calls\` (` +
     "`id` INT NOT NULL AUTO_INCREMENT," +
     "`roomid` VARCHAR(45) NOT NULL," +
+    "`doctor_id` INT NOT NULL," +
+    "`patient_id` INT NOT NULL," +
     "PRIMARY KEY (`id`)," +
     "CONSTRAINT `doctor_id` " +
-      "FOREIGN KEY (`id`) "+
+      "FOREIGN KEY (`doctor_id`) "+
       "REFERENCES `telemedicine`.`user_doctor` (`id`) " +
       "ON DELETE CASCADE " +
       "ON UPDATE CASCADE, " +
     "CONSTRAINT `patient_id` " +
-      "FOREIGN KEY (`id`) " +
+      "FOREIGN KEY (`patient_id`) " +
       "REFERENCES `telemedicine`.`user_patient` (`id`) " +
       "ON DELETE CASCADE " +
       "ON UPDATE CASCADE )";

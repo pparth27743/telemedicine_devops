@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { webrtcServerUrl } from 'src/environments/environment';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { WebrtcService } from 'src/app/services/webrtc.service';
 
 const mediaConstraints = {
@@ -52,10 +52,9 @@ export class HomeComponent implements OnInit {
   videoMuted = [];
 
   newStream_audioEnabled = false;
-  newStream_videoEnabled = false;  
+  newStream_videoEnabled = false;
 
   ListHTMLElements = {};
-  // namespace_id;
 
   @ViewChild('clientname_text') el_clientname_text;
   @ViewChild('audio_input_source') el_audio_input_source;
@@ -74,15 +73,16 @@ export class HomeComponent implements OnInit {
 
   constructor(private webrtcService: WebrtcService, private renderer: Renderer2, private modalService: NgbModal) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.setupSocket();
+  }
 
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   async createRoom() {
     this.toggleButtonDisability(true);
-    this.setupSocket();
     this.clientName = this.el_clientname_text.nativeElement.value;
 
     // Get Room Id
@@ -108,7 +108,6 @@ export class HomeComponent implements OnInit {
 
   async joinRoom() {
     this.toggleButtonDisability(true);
-    this.setupSocket();
     this.roomId = this.el_join_room_text.nativeElement.value;
     this.clientName = this.el_clientname_text.nativeElement.value;
 
@@ -187,8 +186,8 @@ export class HomeComponent implements OnInit {
     selectAudio.disabled = !audioEnabled;
     selectVideo.disabled = !videoEnabled;
 
-    selectAudio.addEventListener('change', (changeEvent) => {this.changeDevice(changeEvent)});
-    selectVideo.addEventListener('change', (changeEvent) => {this.changeDevice(changeEvent)});
+    selectAudio.addEventListener('change', (changeEvent) => { this.changeDevice(changeEvent) });
+    selectVideo.addEventListener('change', (changeEvent) => { this.changeDevice(changeEvent) });
 
     this.ListHTMLElements['audio-source-' + instance] = selectAudio;
     this.ListHTMLElements['video-source-' + instance] = selectVideo;
@@ -237,14 +236,14 @@ export class HomeComponent implements OnInit {
       const toggleMicrophone = this.renderer.createElement('i');
       toggleMicrophone.setAttribute('id', 'mic-' + instance);
       toggleMicrophone.classList.add('fas', 'fa-microphone');
-      toggleMicrophone.addEventListener('click', (audioControlElement) => {this.onClickAudioControl(audioControlElement)});
+      toggleMicrophone.addEventListener('click', (audioControlElement) => { this.onClickAudioControl(audioControlElement) });
       controlsDiv.appendChild(toggleMicrophone);
     }
     if (videoEnabled === true) {
       const toggleVideo = this.renderer.createElement('i');
       toggleVideo.setAttribute('id', 'vid-' + instance);
       toggleVideo.classList.add('fas', 'fa-video', 'ml-5');
-      toggleVideo.addEventListener('click', (videoControlElement) => {this.onClickVideoControl(videoControlElement)});
+      toggleVideo.addEventListener('click', (videoControlElement) => { this.onClickVideoControl(videoControlElement) });
       controlsDiv.appendChild(toggleVideo);
     }
     controlsDiv.addEventListener('mouseover', () => {
@@ -270,17 +269,17 @@ export class HomeComponent implements OnInit {
 
     let videoId = videoMetaData['video-id'];
     let id = videoId;
-    
+
     if (videoMetaData['video-instance'] !== null) {
       videoId = videoId + '~' + videoMetaData['video-instance'];
     }
-    
+
     videoElement.setAttribute('id', videoId);
     videoElement.playsInline = constraints['playsInline'];
     videoElement.muted = constraints['muted'];
     videoElement.autoplay = constraints['autoplay'];
 
-    if(this.ListHTMLElements[id] == undefined){
+    if (this.ListHTMLElements[id] == undefined) {
       this.ListHTMLElements[id] = [];
     }
 
@@ -454,14 +453,14 @@ export class HomeComponent implements OnInit {
   }
 
   async setRemoteStream(trackEvent, peerId, peerName) {
-  
+
     let vidElements = this.ListHTMLElements[peerId];
-    if(vidElements === undefined){
+    if (vidElements === undefined) {
       vidElements = [];
     }
 
     const length = vidElements.length;
-    let videoElement = vidElements[length - 1]; 
+    let videoElement = vidElements[length - 1];
     const nextIndex = videoElement ? Number(vidElements[length - 1].id.split('~')[1]) + 1 : 0;
 
     if ((videoElement) && (videoElement.srcObject.id === trackEvent.streams[0].id)) {
@@ -550,7 +549,7 @@ export class HomeComponent implements OnInit {
     });
     for (let i = 0; i !== deviceInfos.length; ++i) {
       const deviceInfo = deviceInfos[i];
-      
+
       const option = this.renderer.createElement('option');
       option.value = deviceInfo.deviceId;
       if (deviceInfo.kind === 'audioinput') {
@@ -570,19 +569,26 @@ export class HomeComponent implements OnInit {
 
   // Socket Functions
   setupSocket() {
-    this.socket = io(webrtcServerUrl);
-
-    this.socket.on('connect', () => { this.onConnect() });
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const namespace_id = currentUser['namespace_id'];
+    this.socket = io(`${webrtcServerUrl}/${namespace_id}`);
+    this.socket.on('connect', () => { this.onConnect(namespace_id) });
     this.socket.on('room-joined', (data) => { this.onRoomJoined(data) });
     this.socket.on('ice-candidate', (data) => { this.onIceCandidate(data) });
     this.socket.on('send-metadata', (data) => { this.onMetaData(data) });
     this.socket.on('offer', (data) => { this.onOffer(data) });
     this.socket.on('answer', (data) => { this.onAnswer(data) });
     this.socket.on('client-disconnected', (data) => { this.onClientDisconnected(data) });
+    this.socket.on('new-patient', (data) => { this.onNewPatient(data) });
   }
 
-  onConnect() {
+  onNewPatient(data){
+    console.log(data);
+  }
+
+  onConnect(namespace_id) {
     this.clientId = this.socket.id;
+    this.socket.emit('doctor-joined', { 'client-id': this.clientId, 'namespace-id': namespace_id });
   }
 
   async onRoomJoined(data) {

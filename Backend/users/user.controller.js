@@ -3,7 +3,8 @@ const {
     getUserByUserEmail,
     updateUser,
     deleteUser,
-    getDoctorsBySpecialization
+    getDoctorsBySpecialization,
+    addToWaitListService
 } = require("./user.service");
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -96,6 +97,20 @@ module.exports = {
                 return res.json({
                     success: 1,
                     message: "doctors exists",
+                    data: results,
+                });
+            } 
+        });
+    },
+    addToWaitList: (req, res) => {
+        addToWaitListService(req.body, (err, results) => {
+            if (err) {
+                logger.error(err);
+            }
+            if (results) {
+                return res.json({
+                    success: 1,
+                    message: "added patient to waitlist",
                     data: results,
                 });
             } 

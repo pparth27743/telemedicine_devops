@@ -80,6 +80,23 @@ module.exports = {
             }
         );
     },
+    addToWaitListService: (data, callBack) => {
+        pool.query(
+            `insert into ${process.env.MYSQL_DB}.pending_calls (roomid, doctor_id, patient_id) 
+                values(?,?,?)`,
+            [
+                data.room_id,
+                data.doctor_id,
+                data.patient_id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
     getUsers: callBack => {
         pool.query(
             `select id,firstName,lastName,email,role from ${process.env.MYSQL_DB}.users`,

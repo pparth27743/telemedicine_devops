@@ -22,4 +22,10 @@ export class UsersService {
     return this.http.post(`${baseUrl}users/getdoctors/`, { 'specialization': specialization });
   }
 
+  addPatientToWaitList(doctor_id, roomId){
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      const patient_id = currentUser['id'];
+      return this.http.post(`${baseUrl}users/addtowaitlist/`, { 'doctor_id': doctor_id, 'patient_id' : patient_id, 'room_id' : roomId });
+  }
+
 }

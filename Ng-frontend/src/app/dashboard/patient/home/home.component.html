@@ -43,19 +43,21 @@
       </mat-form-field>
     </div>
 
-    <div class="col-md-4 text-center">
-      <mat-form-field appearance="fill" *ngIf="specializationSelect.value">
-        <mat-label>Doctor</mat-label>
-        <mat-select #doctorSelect (selectionChange)="onChangeDoctor(doctorSelect.value)">
-          <mat-option *ngFor="let doc of doctors" [value]="doc.value">
-            {{doc.viewValue}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div class="col-md-4 m-auto text-center">
-      <button #btn_join_room id="btn-join-room" class="btn btn-warning">Connect</button>
+    <div *ngIf="specializationSelect.value !== undefined">
+      <div class="col-md-4 text-center">
+        <mat-form-field appearance="fill">
+          <mat-label>Doctor</mat-label>
+          <mat-select #doctorSelect>
+            <mat-option *ngFor="let doc of doctors" [value]="doc.value">
+              {{doc.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 m-auto text-center">
+        <button #btn_join_room id="btn-join-room" class="btn btn-warning"
+          (click)="chekckAvailability(doctorSelect.value, doctorSelect.label)">Connect</button>
+      </div>
     </div>
 
   </div>
