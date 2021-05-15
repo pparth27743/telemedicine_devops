@@ -1,8 +1,11 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { webrtcServerUrl } from 'src/environments/environment';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { WebrtcService } from 'src/app/services/webrtc.service';
+import { listOfSpecialization } from 'src/app/shared/variables';
+import { UsersService } from 'src/app/services/users.service';
 
 const mediaConstraints = {
   audio: {
@@ -46,14 +49,14 @@ export class HomeComponent implements OnInit {
   peerConnections = {};
   roomId;
   clientId;
-
   audioMuted = [];
   videoMuted = [];
-
   newStream_audioEnabled = false;
-  newStream_videoEnabled = false;  
-
+  newStream_videoEnabled = false;
   ListHTMLElements = {};
+
+  specializations = listOfSpecialization;
+  doctors;
 
   @ViewChild('clientname_text') el_clientname_text;
   @ViewChild('audio_input_source') el_audio_input_source;
@@ -70,12 +73,29 @@ export class HomeComponent implements OnInit {
   @ViewChild('local_video_display') el_local_video_display;
   @ViewChild('remote_video_display') el_remote_video_display;
 
-  constructor(private http: HttpClient, private renderer: Renderer2, private modalService: NgbModal) { }
+  constructor(private webrtcService: WebrtcService, private renderer: Renderer2, private modalService: NgbModal, private userService: UsersService) { }
 
-    open(content) {
-      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
-    }
+  ngOnInit(): void { }
 
+  open(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  onChangeSpecialization(specialization) {
+    console.log(specialization);
+    this.userService.getDoctors(specialization).subscribe(res => {
+      console.log(res);
+      this.doctors = [];
+      res['data'].forEach(doc => {
+        const name = doc.firstName + ' ' + (doc.lastName ? doc.lastName : ''); 
+        this.doctors.push({ value: doc.namespace_id, viewValue: name});
+      })
+    });
+  }
+
+  onChangeDoctor(name){
+    console.log(name);
+  }
 
   async createRoom() {
     this.toggleButtonDisability(true);
@@ -83,7 +103,7 @@ export class HomeComponent implements OnInit {
     this.clientName = this.el_clientname_text.nativeElement.value;
 
     // Get Room Id
-    this.http.get(`${webrtcServerUrl}/createRoom`)
+    this.webrtcService.createRoom()
       .subscribe(
         async data => {
           this.roomId = data['room-id'];
@@ -109,7 +129,7 @@ export class HomeComponent implements OnInit {
     this.roomId = this.el_join_room_text.nativeElement.value;
     this.clientName = this.el_clientname_text.nativeElement.value;
 
-    this.http.get(`${webrtcServerUrl}/joinRoom?roomId=${this.roomId}`)
+    this.webrtcService.joinRoom(this.roomId)
       .subscribe(
         async data => {
           if (data['status'] === 200) {
@@ -184,8 +204,8 @@ export class HomeComponent implements OnInit {
     selectAudio.disabled = !audioEnabled;
     selectVideo.disabled = !videoEnabled;
 
-    selectAudio.addEventListener('change', (changeEvent) => {this.changeDevice(changeEvent)});
-    selectVideo.addEventListener('change', (changeEvent) => {this.changeDevice(changeEvent)});
+    selectAudio.addEventListener('change', (changeEvent) => { this.changeDevice(changeEvent) });
+    selectVideo.addEventListener('change', (changeEvent) => { this.changeDevice(changeEvent) });
 
     this.ListHTMLElements['audio-source-' + instance] = selectAudio;
     this.ListHTMLElements['video-source-' + instance] = selectVideo;
@@ -234,14 +254,14 @@ export class HomeComponent implements OnInit {
       const toggleMicrophone = this.renderer.createElement('i');
       toggleMicrophone.setAttribute('id', 'mic-' + instance);
       toggleMicrophone.classList.add('fas', 'fa-microphone');
-      toggleMicrophone.addEventListener('click', (audioControlElement) => {this.onClickAudioControl(audioControlElement)});
+      toggleMicrophone.addEventListener('click', (audioControlElement) => { this.onClickAudioControl(audioControlElement) });
       controlsDiv.appendChild(toggleMicrophone);
     }
     if (videoEnabled === true) {
       const toggleVideo = this.renderer.createElement('i');
       toggleVideo.setAttribute('id', 'vid-' + instance);
       toggleVideo.classList.add('fas', 'fa-video', 'ml-5');
-      toggleVideo.addEventListener('click', (videoControlElement) => {this.onClickVideoControl(videoControlElement)});
+      toggleVideo.addEventListener('click', (videoControlElement) => { this.onClickVideoControl(videoControlElement) });
       controlsDiv.appendChild(toggleVideo);
     }
     controlsDiv.addEventListener('mouseover', () => {
@@ -267,17 +287,17 @@ export class HomeComponent implements OnInit {
 
     let videoId = videoMetaData['video-id'];
     let id = videoId;
-    
+
     if (videoMetaData['video-instance'] !== null) {
       videoId = videoId + '~' + videoMetaData['video-instance'];
     }
-    
+
     videoElement.setAttribute('id', videoId);
     videoElement.playsInline = constraints['playsInline'];
     videoElement.muted = constraints['muted'];
     videoElement.autoplay = constraints['autoplay'];
 
-    if(this.ListHTMLElements[id] == undefined){
+    if (this.ListHTMLElements[id] == undefined) {
       this.ListHTMLElements[id] = [];
     }
 
@@ -451,14 +471,14 @@ export class HomeComponent implements OnInit {
   }
 
   async setRemoteStream(trackEvent, peerId, peerName) {
-  
+
     let vidElements = this.ListHTMLElements[peerId];
-    if(vidElements === undefined){
+    if (vidElements === undefined) {
       vidElements = [];
     }
 
     const length = vidElements.length;
-    let videoElement = vidElements[length - 1]; 
+    let videoElement = vidElements[length - 1];
     const nextIndex = videoElement ? Number(vidElements[length - 1].id.split('~')[1]) + 1 : 0;
 
     if ((videoElement) && (videoElement.srcObject.id === trackEvent.streams[0].id)) {
@@ -547,7 +567,7 @@ export class HomeComponent implements OnInit {
     });
     for (let i = 0; i !== deviceInfos.length; ++i) {
       const deviceInfo = deviceInfos[i];
-      
+
       const option = this.renderer.createElement('option');
       option.value = deviceInfo.deviceId;
       if (deviceInfo.kind === 'audioinput') {
@@ -653,7 +673,5 @@ export class HomeComponent implements OnInit {
   handleError(error, from = undefined) {
     console.error(`An Error Occurred from : ${from} :: `, error);
   }
-
-  ngOnInit(): void { }
 
 }

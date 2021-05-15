@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { baseUrl, webrtcServerUrl } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { WebrtcService } from './webrtc.service';
 
 
 @Injectable({
@@ -47,31 +48,7 @@ export class AuthServiceService {
     console.error(`An Error Occurred from : ${from} :: `, error);
   }
 
-
-  // remove NameSpace
-  removeNamespace(namespace_id){
-    this.http.get(`${webrtcServerUrl}/removeNamespace?namespace_id=${namespace_id}`)
-    .subscribe(
-       data => {
-        if (data['status'] === 200) {
-          
-        }
-        else {
-          this.handleError(data['error'], "removeNamespace->if else");
-        }
-      },
-      error => {
-        this.handleError(error, "removeNamespace");
-      }
-    )
-  }
-
   logout() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if(currentUser['role'] === 'Doctor'){
-      this.removeNamespace(currentUser['namespace_id']);
-    }
-
     // remove user from local storage and set current user to null
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);

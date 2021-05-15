@@ -9,16 +9,17 @@ import { baseUrl } from 'src/environments/environment';
 })
 export class UsersService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  update(data):Observable<any> {
+  update(data): Observable<any> {
     return this.http.patch(`${baseUrl}users/`, data)
-    .pipe(map(data => {
-      console.log();
-      // localStorage.setItem('currentUser', JSON.stringify(data['currentUser']));
-      return data;
-    }));
+      .pipe(map(data => {
+        return data;
+      }));
   }
 
+  getDoctors(specialization) {
+    return this.http.post(`${baseUrl}users/getdoctors/`, { 'specialization': specialization });
+  }
 
 }

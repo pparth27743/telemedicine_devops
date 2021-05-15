@@ -2,7 +2,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { webrtcServerUrl } from 'src/environments/environment';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { WebrtcService } from 'src/app/services/webrtc.service';
 
 const mediaConstraints = {
   audio: {
@@ -71,12 +72,13 @@ export class HomeComponent implements OnInit {
   @ViewChild('local_video_display') el_local_video_display;
   @ViewChild('remote_video_display') el_remote_video_display;
 
-  constructor(private http: HttpClient, private renderer: Renderer2, private modalService: NgbModal) { }
+  constructor(private webrtcService: WebrtcService, private renderer: Renderer2, private modalService: NgbModal) { }
 
-    open(content) {
-      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
-    }
+  ngOnInit(): void { }
 
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+  }
 
   async createRoom() {
     this.toggleButtonDisability(true);
@@ -84,7 +86,7 @@ export class HomeComponent implements OnInit {
     this.clientName = this.el_clientname_text.nativeElement.value;
 
     // Get Room Id
-    this.http.get(`${webrtcServerUrl}/createRoom`)
+    this.webrtcService.createRoom()
       .subscribe(
         async data => {
           this.roomId = data['room-id'];
@@ -110,7 +112,7 @@ export class HomeComponent implements OnInit {
     this.roomId = this.el_join_room_text.nativeElement.value;
     this.clientName = this.el_clientname_text.nativeElement.value;
 
-    this.http.get(`${webrtcServerUrl}/joinRoom?roomId=${this.roomId}`)
+    this.webrtcService.joinRoom(this.roomId)
       .subscribe(
         async data => {
           if (data['status'] === 200) {
@@ -649,34 +651,9 @@ export class HomeComponent implements OnInit {
     }
   }
 
-
   // Error Functions
   handleError(error, from = undefined) {
     console.error(`An Error Occurred from : ${from} :: `, error);
   }
-
-
-  // create NameSpace
-  createNamespace(namespace_id){
-    this.http.get(`${webrtcServerUrl}/createNamespace?namespace_id=${namespace_id}`)
-    .subscribe(
-      async data => {
-        if (data['status'] === 200) {
-          // close spinner
-        }
-        else {
-          this.handleError(data['error'], "createNamespace->if else");
-        }
-      },
-      error => {
-        this.handleError(error, "createNamespace");
-      }
-    )
-  }
-
-  ngOnInit(): void {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      this.createNamespace(currentUser['namespace_id']);
-   }
 
 }

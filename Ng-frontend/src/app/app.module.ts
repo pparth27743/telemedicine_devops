@@ -18,6 +18,7 @@ import { JwtInterceptor } from './services/jwt.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatSelectModule } from '@angular/material/select';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { UsersService } from './services/users.service';
 
 
 @NgModule({

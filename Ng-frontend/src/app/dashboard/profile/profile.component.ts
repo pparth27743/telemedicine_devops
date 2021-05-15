@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/services/auth-service.service';
 import { UsersService } from 'src/app/services/users.service';
-
+import { listOfSpecialization } from 'src/app/shared/variables';
 
 @Component({
   selector: 'app-profile',
@@ -19,17 +19,22 @@ export class ProfileComponent implements OnInit {
   lastname;
   email;
   id;
+  role;
+  specialization;
+
+  specializations = listOfSpecialization;
+
 
   constructor(private usersService: UsersService, private authService: AuthServiceService, private router: Router) {
-    
     const user = this.authService.getcurrentUser;
-
     if (user) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
       this.firstname = this.currentUser['firstname'];
       this.lastname = this.currentUser['lastname'];
       this.email = this.currentUser['email'];
+      this.specialization = this.currentUser['specialization'];
       this.id = this.currentUser['id'];
+      this.role = this.currentUser['role'];
     }
   }
 
@@ -37,12 +42,22 @@ export class ProfileComponent implements OnInit {
     this.initForm();
   }
 
+  checkRole(): Boolean {
+    if (this.role === 'Doctor') {
+      this.details.addControl("specialization", new FormControl(this.specialization, Validators.required));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   initForm() {
     this.details = new FormGroup({
       firstname: new FormControl(this.firstname, Validators.required),
       lastname: new FormControl(this.lastname, Validators.required),
       email: new FormControl(this.email, Validators.required),
-      id: new FormControl(this.id)
+      id: new FormControl(this.id),
+      role: new FormControl(this.role)
     });
   }
 

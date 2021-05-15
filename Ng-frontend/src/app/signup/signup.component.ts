@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../services/auth-service.service';
+import { listOfSpecialization } from '../shared/variables';
 
 @Component({
   selector: 'app-signup',
@@ -15,17 +16,8 @@ export class SignupComponent implements OnInit {
     { value: 'Patient', viewValue: 'Patient' },
   ];
 
-  specializations = [
-    { value: 'Cardiologist', viewValue: 'Cardiologist' },
-    { value: 'Dermatologist', viewValue: 'Dermatologist' },
-    { value: 'General Medicine (MD)', viewValue: 'General Medicine (MD)' },
-    { value: 'Dentist', viewValue: 'Dentist' },
-    { value: 'Gynecologist', viewValue: 'Gynecologist' },
-    { value: 'Neurologist', viewValue: 'Neurologist' },
-    { value: 'Physiotherapist', viewValue: 'Physiotherapist' },
-    { value: 'Orthopedic', viewValue: 'Orthopedic' },
-  ]
-
+  
+  specializations = listOfSpecialization;
   signUpForm: FormGroup;
 
   constructor(private authService: AuthServiceService, private router: Router) { }
@@ -34,13 +26,13 @@ export class SignupComponent implements OnInit {
     this.initForm();
   }
 
-  onChangeRole(role){
-    if(role === 'Doctor'){
+  onChangeRole(role) {
+    if (role === 'Doctor') {
       this.signUpForm.addControl("specialization", new FormControl("", Validators.required));
-    }else{
+    } else {
       this.signUpForm.removeControl("specialization");
     }
-  } 
+  }
 
   initForm() {
     this.signUpForm = new FormGroup({

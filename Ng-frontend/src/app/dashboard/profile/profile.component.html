@@ -16,6 +16,15 @@
         <input matInput type="email" placeholder="Email" formControlName="email">
       </mat-form-field>
 
+      <mat-form-field appearance="fill" *ngIf="checkRole()">
+        <mat-label>Specialization</mat-label>
+        <mat-select formControlName="specialization">
+          <mat-option *ngFor="let specialization of specializations" [value]="specialization.value">
+            {{specialization.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <button mat-raised-button color="primary" type="submit">Update Details</button>
     </form>
   </mat-card>
