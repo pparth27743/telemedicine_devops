@@ -25,6 +25,15 @@
         </mat-select>
       </mat-form-field>
 
+      <section class="example-section">
+        <mat-checkbox #changePWD class="example-margin" (change)="wantToChangePwd(changePWD._checked)">Want to change Password ?</mat-checkbox>
+      </section>
+      
+      <mat-form-field *ngIf="changePWD._checked">
+        <input matInput type="password" placeholder="password" formControlName="password">
+      </mat-form-field>
+
+
       <button mat-raised-button color="primary" type="submit">Update Details</button>
     </form>
   </mat-card>

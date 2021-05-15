@@ -24,6 +24,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HomeComponent as DoctorHomeComponent } from './doctor/home/home.component';
 import { HomeComponent  as PatientHomeComponent } from './patient/home/home.component';
 import { MatOptionModule} from '@angular/material/core';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { MatOptionModule} from '@angular/material/core';
     FlexLayoutModule,
     MatInputModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    MatCheckboxModule
   ],
   exports: [
     FooterComponent

@@ -51,6 +51,14 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  wantToChangePwd(value){
+    if(value === true){
+      this.details.addControl("password", new FormControl("", Validators.required));
+    }else{
+      this.details.removeControl("password");
+    }
+  }
+
   initForm() {
     this.details = new FormGroup({
       firstname: new FormControl(this.firstname, Validators.required),
