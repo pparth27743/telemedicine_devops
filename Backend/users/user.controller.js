@@ -4,7 +4,8 @@ const {
     getUserByUserId,
     getUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    getDoctorsBySpecialization
 } = require("./user.service");
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -21,8 +22,8 @@ module.exports = {
     createUser: (req, res) => {
         const body = req.body;
 
-        const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
+        // const salt = genSaltSync(10);
+        // body.password = hashSync(body.password, salt);
 
         create(body, (err, results) => {
             if (err) {
@@ -56,7 +57,8 @@ module.exports = {
                     message: "No such user exist"
                 });
             }
-            const result = compareSync(body.password, results.password);
+            // const result = compareSync(body.password, results.password);
+            const result = body.password === results.password;
             if (result) {
                 results.password = undefined;
                 const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
@@ -79,6 +81,26 @@ module.exports = {
                     message: "Invalid email or password or role"
                 });
             }
+        });
+    },
+    getDoctors : (req, res) => {
+        getDoctorsBySpecialization(req.body.specialization, (err, results) => {
+            if (err) {
+                logger.error(err);
+            }
+            if (!results) {
+                return res.json({
+                    success: 0,
+                    message: "No doctors exists"
+                });
+            }
+            if (results) {
+                return res.json({
+                    success: 1,
+                    message: "doctors exists",
+                    data: results,
+                });
+            } 
         });
     },
     getUserByUserId: (req, res) => {
@@ -114,30 +136,30 @@ module.exports = {
             });
         });
     },
-        updateUsers: (req, res) => {
-            const body = req.body;
-            const salt = genSaltSync(10);
-            if (body.password) {
-                body.password = hashSync(body.password, salt);
+    updateUsers: (req, res) => {
+        const body = req.body;
+        const salt = genSaltSync(10);
+        if (body.password) {
+            body.password = hashSync(body.password, salt);
+        }
+        updateUser(body, (err, results) => {
+            if (err) {
+                logger.warn("fail to update the data.");
+                return res.json({
+                    success: 0,
+                    message: "fail to update the data.",
+                    error: err['sqlMessage']
+                });
             }
-            updateUser(body, (err, results) => {
-                if (err) {
-                    logger.warn("fail to update the data.");
-                    return res.json({
-                        success: 0,
-                        message: "fail to update the data.",
-                        error: err['sqlMessage']
-                    });
-                }
-                if (results) {
-                    logger.info("updated successfully");
-                    return res.json({
-                        success: 1,
-                        message: "updated successfully",
-                        data: results
-                    });
-                }
-            });
+            if (results) {
+                logger.info("updated successfully");
+                return res.json({
+                    success: 1,
+                    message: "updated successfully",
+                    data: results
+                });
+            }
+        });
     },
     deleteUser: (req, res) => {
         const data = req.body;

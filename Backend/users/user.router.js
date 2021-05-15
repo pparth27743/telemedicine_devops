@@ -8,7 +8,8 @@ const {
     updateUsers,
     deleteUser,
     getUserByUserEmail,
-    validateUser
+    validateUser,
+    getDoctors
 } = require("./user.controller");
 
 
@@ -18,6 +19,7 @@ router.get("/:id", checkToken, getUserByUserId);
 
 router.post("/login", login);
 router.post("/signup", createUser);
+router.post("/getdoctors", getDoctors);
 
 router.patch("/", checkToken, updateUsers);
 router.delete("/", checkToken, deleteUser);
