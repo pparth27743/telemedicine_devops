@@ -37,9 +37,9 @@ con.connect(function (err) {
   "`namespace_id` VARCHAR(45) NOT NULL," +
   "`specialization` ENUM ('Cardiologist', 'Dermatologist', 'General Medicine (MD)', 'Dentist', 'Gynecologist', 'Neurologist',  'Physiotherapist', 'Orthopedic') NOT NULL," +
   "PRIMARY KEY (`id`)," +
-  "UNIQUE INDEX `namespace_id_UNIQUE` (`namespace_id` ASC) VISIBLE," +
-  "UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE," +
-  "UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)";
+  "UNIQUE INDEX `namespace_id_UNIQUE` (`namespace_id` ASC)," +
+  "UNIQUE INDEX `id_UNIQUE` (`id` ASC)," +
+  "UNIQUE INDEX `email_UNIQUE` (`email` ASC))";
 
   con.query(stmt, function (err, result) {
     if (err) throw err;
@@ -52,8 +52,8 @@ con.connect(function (err) {
   "`email` VARCHAR(45) NOT NULL," +
   "`password` VARCHAR(100) NOT NULL," +
   "PRIMARY KEY (`id`)," +
-  "UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE," +
-  "UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE )";
+  "UNIQUE INDEX `id_UNIQUE` (`id` ASC)," +
+  "UNIQUE INDEX `email_UNIQUE` (`email` ASC) )";
 
   con.query(stmt, function (err, result) {
     if (err) throw err;
