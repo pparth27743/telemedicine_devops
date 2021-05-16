@@ -1,0 +1,7 @@
+2021-05-16 13:19:52[app.js] info: "login successfully"
+2021-05-16 13:24:34[app.js] info: "login successfully"
+2021-05-16 13:29:04[app.js] warn: "Invalid email or password or role"
+2021-05-16 13:29:10[app.js] info: "login successfully"
+2021-05-16 13:36:00[app.js] error: "ER_BAD_NULL_ERROR: Column 'doctor_id' cannot be null"
+2021-05-16 13:40:27[app.js] info: "login successfully"
+2021-05-16 13:59:16[app.js] info: "login successfully"

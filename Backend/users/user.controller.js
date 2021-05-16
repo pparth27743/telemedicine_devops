@@ -1,10 +1,12 @@
 const {
     create,
     getUserByUserEmail,
-    getUserByUserId,
-    getUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    getDoctorsBySpecialization,
+    addToWaitListService,
+    getWaitingPatientsService,
+    removePatientFromWaitlistService
 } = require("./user.service");
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -21,8 +23,8 @@ module.exports = {
     createUser: (req, res) => {
         const body = req.body;
 
-        const salt = genSaltSync(10);
-        body.password = hashSync(body.password, salt);
+        // const salt = genSaltSync(10);
+        // body.password = hashSync(body.password, salt);
 
         create(body, (err, results) => {
             if (err) {
@@ -45,7 +47,7 @@ module.exports = {
     },
     login: (req, res) => {
         const body = req.body;
-        getUserByUserEmail(body.email, (err, results) => {
+        getUserByUserEmail(body, (err, results) => {
             if (err) {
                 logger.error(err);
             }
@@ -56,7 +58,8 @@ module.exports = {
                     message: "No such user exist"
                 });
             }
-            const result = compareSync(body.password, results.password) && (body.role == results.role);
+            // const result = compareSync(body.password, results.password);
+            const result = body.password === results.password;
             if (result) {
                 results.password = undefined;
                 const jsontoken = sign({ result: results }, process.env.JWT_KEY, {
@@ -68,6 +71,7 @@ module.exports = {
                     message: "login successfully",
                     currentUser: {
                         ...results,
+                        role: body.role,
                         token: jsontoken,
                     }
                 });
@@ -80,45 +84,89 @@ module.exports = {
             }
         });
     },
-    getUserByUserId: (req, res) => {
-        const id = req.params.id;
-        getUserByUserId(id, (err, results) => {
+    getDoctors : (req, res) => {
+        getDoctorsBySpecialization(req.body.specialization, (err, results) => {
             if (err) {
                 logger.error(err);
-                return;
             }
             if (!results) {
-                logger.warn("Record not Found");
                 return res.json({
                     success: 0,
-                    message: "Record not Found"
+                    message: "No doctors exists"
                 });
             }
-            results.password = undefined;
-            return res.json({
-                success: 1,
-                data: results
-            });
+            if (results) {
+                return res.json({
+                    success: 1,
+                    message: "doctors exists",
+                    data: results,
+                });
+            } 
         });
     },
-    getUsers: (req, res) => {
-        getUsers((err, results) => {
+    addToWaitList: (req, res) => {
+        addToWaitListService(req.body, (err, results) => {
             if (err) {
                 logger.error(err);
-                return;
+                return res.json({
+                    success: 0,
+                    message: "not able to add patient to waitlist",
+                    error: err['sqlMessage']
+                });
             }
-            return res.json({
-                success: 1,
-                data: results
-            });
+            if (results) {
+                return res.json({
+                    success: 1,
+                    message: "added patient to waitlist",
+                    data: results,
+                });
+            } 
+        });
+    },
+    removePatientFromWaitlist: (req, res) => {
+        removePatientFromWaitlistService(req.body, (err, results) => {
+            if (err) {
+                logger.error(err);
+                return res.json({
+                    success: 0,
+                    message: "not able to remove patient from waitlist",
+                    error: err['sqlMessage']
+                });
+            }
+            if (results) {
+                return res.json({
+                    success: 1,
+                    message: "removed patient from waitlist",
+                    data: results,
+                });
+            } 
+        });
+    },
+    getWaitingPatients : (req, res) => {
+        getWaitingPatientsService(req.body, (err, results) => {
+            if (err) {
+                logger.error(err);
+                return res.json({
+                    success: 0,
+                    message: "not able to get  waitlist of patient",
+                    error: err['sqlMessage']
+                });
+            }
+            if (results) {
+                return res.json({
+                    success: 1,
+                    message: "got waitlist of patients",
+                    data: results,
+                });
+            } 
         });
     },
     updateUsers: (req, res) => {
         const body = req.body;
-        const salt = genSaltSync(10);
-        if (body.password) {
-            body.password = hashSync(body.password, salt);
-        }
+        // const salt = genSaltSync(10);
+        // if (body.password) {
+        //     body.password = hashSync(body.password, salt);
+        // }
         updateUser(body, (err, results) => {
             if (err) {
                 logger.warn("fail to update the data.");

@@ -1,31 +1,26 @@
 <div class="container mt-4" #CreateJoinRoom>
   <section #sec_details id="sec-details">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <input #clientname_text type="text" class="form-control" id="clientname-text" placeholder="Enter a Username">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div *ngFor="let patient of listOfPatient; let i = index" class="drop-item">
+            <h5>{{patient.viewValue}}</h5>
+            <div class="text-center" style="font-size: 1.25rem;">
+              <i class="fa fa-phone" aria-hidden="true" (click)="acceptCall(patient, i)"
+                style="width: 50%; color: green; cursor: pointer;"></i>
+              <i class="fa fa-times" aria-hidden="true" (click)="rejectCall(patient, i)"
+                style="width: 50%; color: red; cursor: pointer;"></i>
+            </div>
+            <hr style="margin: 0px 0px;">
+          </div>
         </div>
       </div>
     </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-7 text-center">
-        <div class="form-group">
-          <input #join_room_text class="form-control" id="join-room-text" type="text" placeholder="Enter the Room Id">
-        </div>
-      </div>
-      <div class="col-md-2 text-center">
-        <button #btn_join_room id="btn-join-room" class="btn btn-warning" (click)="joinRoom()">Join Room</button>
-      </div>
-
-      <div class="col-md-1 text-center pt-2">
-        <strong class="">OR</strong>
-      </div>
-      <div class="col-md-2 text-center">
-        <button #btn_create_room id="btn-create-room" class="btn btn-success" (click)="createRoom()">Create
-          Room</button>
-      </div>
-    </div>
+  </div>
   </section>
   
   <hr>
@@ -39,17 +34,20 @@
     </div>
     <div class="modal-body">
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox"  [(ngModel)]="newStream_audioEnabled" id="audio-check" value="audio">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="newStream_audioEnabled" id="audio-check"
+          value="audio">
         <label class="form-check-label" for="audio-check">Audio Track</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" [(ngModel)]="newStream_videoEnabled" id="video-check"  value="video">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="newStream_videoEnabled" id="video-check"
+          value="video">
         <label class="form-check-label" for="video-check">Video Track</label>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">Close</button>
-      <button type="button" class="btn btn-primary" (click)="addStream()"  (click)="modal.close()" data-dismiss="modal">Add Tracks</button>
+      <button type="button" class="btn btn-primary" (click)="addStream()" (click)="modal.close()"
+        data-dismiss="modal">Add Tracks</button>
     </div>
   </ng-template>
 

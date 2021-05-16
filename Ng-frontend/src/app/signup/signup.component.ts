@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../services/auth-service.service';
+import { listOfSpecialization } from '../shared/variables';
 
 @Component({
   selector: 'app-signup',
@@ -11,17 +12,26 @@ import { AuthServiceService } from '../services/auth-service.service';
 export class SignupComponent implements OnInit {
 
   rolelist = [
-    { value: 'doctor', viewValue: 'Doctor' },
-    { value: 'paramedical', viewValue: 'Paramedical' },
+    { value: 'Doctor', viewValue: 'Doctor' },
+    { value: 'Patient', viewValue: 'Patient' },
   ];
 
-
+  
+  specializations = listOfSpecialization;
   signUpForm: FormGroup;
 
   constructor(private authService: AuthServiceService, private router: Router) { }
 
   ngOnInit(): void {
     this.initForm();
+  }
+
+  onChangeRole(role) {
+    if (role === 'Doctor') {
+      this.signUpForm.addControl("specialization", new FormControl("", Validators.required));
+    } else {
+      this.signUpForm.removeControl("specialization");
+    }
   }
 
   initForm() {

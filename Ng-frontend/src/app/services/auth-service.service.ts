@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { baseUrl } from 'src/environments/environment';
+import { baseUrl, webrtcServerUrl } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { WebrtcService } from './webrtc.service';
 
 
 @Injectable({
@@ -40,6 +41,11 @@ export class AuthServiceService {
 
   signup(data): Observable<any> {
     return this.http.post(`${baseUrl}users/signup`, data);
+  }
+
+  // Error Functions
+  handleError(error, from = undefined) {
+    console.error(`An Error Occurred from : ${from} :: `, error);
   }
 
   logout() {

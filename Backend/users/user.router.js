@@ -3,23 +3,29 @@ const { checkToken } = require("../middleware/jwt_validation");
 const {
     createUser,
     login,
-    getUserByUserId,
-    getUsers,
     updateUsers,
     deleteUser,
-    getUserByUserEmail,
-    validateUser
+    validateUser,
+    getDoctors,
+    addToWaitList,
+    getWaitingPatients,
+    removePatientFromWaitlist
 } = require("./user.controller");
 
 
 router.get("/validate", checkToken, validateUser);
-router.get("/getallusers", checkToken, getUsers);
-router.get("/:id", checkToken, getUserByUserId);
 
 router.post("/login", login);
 router.post("/signup", createUser);
+router.post("/getdoctors", getDoctors);
+router.post("/addtowaitlist", addToWaitList);
+router.post("/getwaitingpatients", getWaitingPatients);
+router.post("/removefromwaitlist", removePatientFromWaitlist);
+
+
 
 router.patch("/", checkToken, updateUsers);
-router.delete("/", checkToken, deleteUser);
+router.delete("/doctor", checkToken, deleteUser);
+
 
 module.exports = router;

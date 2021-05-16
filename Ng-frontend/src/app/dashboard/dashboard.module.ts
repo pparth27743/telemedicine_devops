@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { DashboardRoutingModule } from './dashboard.routing';
-import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard.component';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -17,20 +15,25 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { ProfileComponent } from './profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { FooterComponent } from './footer/footer.component';
+import { HomeComponent as DoctorHomeComponent } from './doctor/home/home.component';
+import { HomeComponent  as PatientHomeComponent } from './patient/home/home.component';
+import { MatOptionModule} from '@angular/material/core';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
-  declarations: [HomeComponent,
-    DashboardComponent, 
-    HeaderComponent, 
-    SidebarComponent, 
+  declarations: [
+    DoctorHomeComponent,
+    PatientHomeComponent,
+    DashboardComponent,
+    HeaderComponent,
+    SidebarComponent,
     ProfileComponent,
     FooterComponent,
   ],
@@ -50,10 +53,11 @@ import { FooterComponent } from './footer/footer.component';
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     FlexLayoutModule,
     MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatCheckboxModule
   ],
   exports: [
     FooterComponent

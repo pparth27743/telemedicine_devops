@@ -14,10 +14,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignupComponent } from './signup/signup.component';
-import { DashboardModule } from './dashboard/dashboard.module';
 import { JwtInterceptor } from './services/jwt.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatSelectModule } from '@angular/material/select';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { UsersService } from './services/users.service';
 
 
 @NgModule({
@@ -39,9 +40,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatToolbarModule,
     FormsModule,
     ReactiveFormsModule,
-    DashboardModule,
     NgbModule,
     MatSelectModule,
+    DashboardModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]

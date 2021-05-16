@@ -11,10 +11,10 @@ import { AuthServiceService } from '../services/auth-service.service';
 export class LoginComponent implements OnInit {
 
     rolelist = [
-        { value: 'doctor', viewValue: 'Doctor' },
-        { value: 'paramedical', viewValue: 'Paramedical' },
-    ];
-
+        { value: 'Doctor', viewValue: 'Doctor' },
+        { value: 'Patient', viewValue: 'Patient' },
+      ];
+    
     loginForm: FormGroup;
 
     constructor(private authService: AuthServiceService, private router: Router) {
@@ -37,7 +37,13 @@ loginProcess() {
         this.authService.login(this.loginForm.value).subscribe(result => {
             if (result.success) {
                 alert(result.message);
-                this.router.navigate(['dashboard/home']);
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if(currentUser['role'] === 'Doctor'){
+                    this.router.navigate(['dashboard/doctor/home']);  
+                }else{
+                    this.router.navigate(['dashboard/patient/home']);
+                }
+                
             } else {
                 alert(result.message);
             }
