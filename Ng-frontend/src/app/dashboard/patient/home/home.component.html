@@ -1,66 +1,37 @@
 <div class="container mt-4" #CreateJoinRoom>
-  <!-- <section #sec_details id="sec-details">
+  <section #sec_details id="sec-details">
     <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <input #clientname_text type="text" class="form-control" id="clientname-text" placeholder="Enter a Username">
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-md-7 text-center">
-        <div class="form-group">
-          <input #join_room_text class="form-control" id="join-room-text" type="text" placeholder="Enter the Room Id">
-        </div>
-      </div>
-      <div class="col-md-2 text-center">
-        <button #btn_join_room id="btn-join-room" class="btn btn-warning" (click)="joinRoom()">Join Room</button>
-      </div>
-
-      <div class="col-md-1 text-center pt-2">
-        <strong class="">OR</strong>
-      </div>
-      <div class="col-md-2 text-center">
-        <button #btn_create_room id="btn-create-room" class="btn btn-success" (click)="createRoom()">Create
-          Room</button>
-      </div>
-    </div>
-  </section>
-
-  <hr> -->
-
-
-  <div class="row">
-    <div class="col-md-4 text-center">
-      <mat-form-field appearance="fill">
-        <mat-label>Specialization</mat-label>
-        <mat-select #specializationSelect (selectionChange)="onChangeSpecialization(specializationSelect.value)">
-          <mat-option *ngFor="let specialization of specializations" [value]="specialization.value">
-            {{specialization.viewValue}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div *ngIf="specializationSelect.value !== undefined">
       <div class="col-md-4 text-center">
         <mat-form-field appearance="fill">
-          <mat-label>Doctor</mat-label>
-          <mat-select #doctorSelect>
-            <mat-option *ngFor="let doc of doctors" [value]="doc.value">
-              {{doc.viewValue}}
+          <mat-label>Specialization</mat-label>
+          <mat-select #specializationSelect (selectionChange)="onChangeSpecialization(specializationSelect.value)">
+            <mat-option *ngFor="let specialization of specializations" [value]="specialization.value">
+              {{specialization.viewValue}}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-md-4 m-auto text-center">
-        <button #btn_join_room id="btn-join-room" class="btn btn-warning"
-          (click)="chekckAvailability(doctorSelect.value, doctorSelect.label)">Connect</button>
+
+      <div *ngIf="specializationSelect.value !== undefined">
+        <div class="col-md-4 text-center">
+          <mat-form-field appearance="fill">
+            <mat-label>Doctor</mat-label>
+            <mat-select #doctorSelect>
+              <mat-option *ngFor="let doc of doctors" [value]="doc.value">
+                {{doc.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4 text-center">
+          <button id="btn-join-room" class="btn btn-warning"
+            (click)="chekckAvailability(doctorSelect.value, doctorSelect.label)">Connect</button>
+        </div>
       </div>
     </div>
+  </section>
 
-  </div>
+  <hr>
 
 
 

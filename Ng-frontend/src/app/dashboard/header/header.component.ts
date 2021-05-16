@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit {
      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
      if (currentUser['role'] === 'Doctor') {
        this.createNamespace(currentUser['namespace_id']);
-     } 
+     }
   }
 
   togglingSideBar() {
