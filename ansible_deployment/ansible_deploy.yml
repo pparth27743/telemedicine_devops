@@ -4,7 +4,7 @@
   tasks:
     - name: Shutdown ruuning application  
       shell:
-        cmd: cd  /tmp/ && docker-compose down
+        cmd: cd  /tmp/ && docker-compose down || true
   
     - name: Copy docker-compose.yml file to remote machine
       copy: 
