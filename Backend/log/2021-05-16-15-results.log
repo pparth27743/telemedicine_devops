@@ -1,0 +1,5 @@
+2021-05-16 15:29:37[app.js] error: "ER_BAD_NULL_ERROR: Column 'patient_id' cannot be null"
+2021-05-16 15:30:25[app.js] error: "ER_BAD_NULL_ERROR: Column 'patient_id' cannot be null"
+2021-05-16 15:30:54[app.js] error: "ER_BAD_NULL_ERROR: Column 'patient_id' cannot be null"
+2021-05-16 15:31:11[app.js] error: "ER_BAD_NULL_ERROR: Column 'patient_id' cannot be null"
+2021-05-16 15:32:01[app.js] error: "ER_BAD_NULL_ERROR: Column 'patient_id' cannot be null"

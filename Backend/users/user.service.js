@@ -109,6 +109,38 @@ module.exports = {
             }
         );
     },
+    addPrescriptionService: (data, callBack) => {
+        pool.query(
+            `insert into ${process.env.MYSQL_DB}.prescription (details, doctor_id, patient_id) 
+                values(?,?,?)`,
+            [
+                data.details,
+                data.doctor_id,
+                data.patient_id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
+    getPrescriptionService: (data, callBack) => {
+        pool.query(
+            `SELECT details FROM ${process.env.MYSQL_DB}.prescription where doctor_id = ? and patient_id = ?`,
+            [
+                data.doctor_id,
+                data.patient_id
+            ],
+            (error, results, fields) => {
+                if (error) {
+                    callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
     getWaitingPatientsService: (data, callBack) => {
         pool.query(
             `SELECT PC.id, PC.roomid, PC.patient_id, UP.firstname, UP.lastname FROM ${process.env.MYSQL_DB}.user_patient as UP, ${process.env.MYSQL_DB}.pending_calls as PC where UP.id = PC.patient_id and doctor_id = ?`,
