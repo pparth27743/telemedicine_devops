@@ -80,7 +80,6 @@ export class HomeComponent implements OnInit {
 
     getPrescription() {
         this.userService.getPrescription(this.selected_doc_id).subscribe(res => {
-            console.log(res);
             const len = res['data'].length;
             if (len != 0) {
                 this.prescription_details = res['data'][len - 1]['details'];
@@ -145,13 +144,15 @@ export class HomeComponent implements OnInit {
     async createRoom() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.clientName = currentUser['firstname'] + ' ' + (currentUser['lastname'] ? currentUser['lastname'] : '');
+        const patient_id = currentUser['id'];
+
 
         // Get Room Id
         const data = await this.webrtcService.createRoom().toPromise();
         this.roomId = data['room-id'];
         await this.setLocalMedia(true, true);
         this.el_room_id.nativeElement.innerText = this.roomId;
-        this.socket.emit('create', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId });
+        this.socket.emit('create', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId, 'patient_id' :patient_id });
         this.toggleButtonDisability(true);
     }
 

@@ -588,7 +588,8 @@ export class HomeComponent implements OnInit {
   }
 
   onNewPatient(data) {
-    this.listOfPatient.push({ value: data['room-id'], viewValue: data['client-name'] });
+    // some times not able to push into array
+    this.listOfPatient.push({ value: data['room-id'], viewValue: data['client-name'], patient_id: data['patient_id']});
   }
 
   onConnect(namespace_id) {

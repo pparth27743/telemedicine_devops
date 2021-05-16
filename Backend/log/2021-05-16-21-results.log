@@ -1,0 +1,6 @@
+2021-05-16 21:10:52[app.js] info: "login successfully"
+2021-05-16 21:11:01[app.js] info: "login successfully"
+2021-05-16 21:11:41[app.js] error: "ER_BAD_NULL_ERROR: Column 'patient_id' cannot be null"
+2021-05-16 21:30:05[app.js] info: "login successfully"
+2021-05-16 21:31:20[app.js] info: "login successfully"
+2021-05-16 21:32:22[app.js] info: "login successfully"
