@@ -26,6 +26,10 @@ export class UsersService {
     return this.http.post(`${baseUrl}users/getwaitingpatients/`, { 'doctor_id': doctor_id });
   }
 
+  removePatientFromWaitlist(patient_room_id){
+    return this.http.post(`${baseUrl}users/removefromwaitlist/`, { 'room_id' : patient_room_id });
+  }
+
   addPatientToWaitList(doctor_id, roomId){
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       const patient_id = currentUser['id'];

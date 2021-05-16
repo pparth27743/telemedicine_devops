@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
   newStream_videoEnabled = false;
 
   ListHTMLElements = {};
-
+  
   listOfPatient = [];
 
   @ViewChild('clientname_text') el_clientname_text;
@@ -79,16 +79,44 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.setupSocket();
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.usersService.getWaitingPatients(currentUser['id']).subscribe(res => {
-        res['data'].forEach(patient => {
-          const name = patient.firstname + ' ' + (patient.lastname ? patient.lastname : '');
-          this.listOfPatient.push({ value: patient.roomid, viewValue: name });
+    this.usersService.getWaitingPatients(currentUser['id']).subscribe(result => {
+      result['data'].forEach(res => {
+        const name = res.firstname + ' ' + (res.lastname ? res.lastname : '');
+        this.listOfPatient.push({ value: res.roomid, viewValue: name });
       });
     });
   }
 
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+
+  acceptCall(data, index): void {
+
+    console.log(data);
+    
+    // this.roomId = data.value;
+    
+    // console.log(data);
+
+    // console.log(this.roomId);
+
+    // this.joinRoom();
+  }
+
+  rejectCall(data, index): void {
+    console.log(data);
+    const roomId = data.value;
+    this.usersService.removePatientFromWaitlist(roomId).subscribe(res => {
+      console.log(res);
+      if(res['success']){
+        this.listOfPatient.splice(index,1);
+      }
+      else{
+        console.log("Could not remove.");
+      }
+    });
   }
 
   async createRoom() {
@@ -116,32 +144,15 @@ export class HomeComponent implements OnInit {
       );
   }
 
+
   async joinRoom() {
-    this.toggleButtonDisability(true);
-    this.roomId = this.el_join_room_text.nativeElement.value;
-    this.clientName = this.el_clientname_text.nativeElement.value;
+    
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.clientName = currentUser['firstname'] + currentUser['lastname'] ? currentUser['lastname'] : "";
 
-    this.webrtcService.joinRoom(this.roomId)
-      .subscribe(
-        async data => {
-          if (data['status'] === 200) {
-            await this.setLocalMedia();
-            this.el_room_id.nativeElement.innerText = this.roomId;
-            this.el_btn_join_room.nativeElement.disabled = true;
-            this.el_btn_create_room.nativeElement.disabled = true;
+    // const data = await this.webrtcService.joinRoom(this.roomId).toPromise();
+    this.socket.emit('join', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId });
 
-            this.socket.emit('join', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId });
-          }
-          else {
-            this.handleError(data['error'], "joinRoom->check room availability Backend call inside subscribe");
-          }
-        },
-        error => {
-          this.socket.close();
-          this.toggleButtonDisability(false);
-          this.handleError(error, "joinRoom->check room availability Backend call");
-        }
-      )
   }
 
   async addStream() {
@@ -589,11 +600,11 @@ export class HomeComponent implements OnInit {
     this.socket.on('offer', (data) => { this.onOffer(data) });
     this.socket.on('answer', (data) => { this.onAnswer(data) });
     this.socket.on('client-disconnected', (data) => { this.onClientDisconnected(data) });
-    this.socket.on('new-patient',   (data) => { this.onNewPatient(data) });
+    this.socket.on('new-patient', (data) => { this.onNewPatient(data) });
   }
 
-  onNewPatient(data){
-    console.log(data);
+  onNewPatient(data) {
+    this.listOfPatient.unshift({ value: data['roomid'], viewValue: data['client-name'] });
   }
 
   onConnect(namespace_id) {

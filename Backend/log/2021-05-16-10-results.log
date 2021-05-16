@@ -1,0 +1,8 @@
+2021-05-16 10:02:39[app.js] warn: "Invalid email or password or role"
+2021-05-16 10:02:43[app.js] info: "login successfully"
+2021-05-16 10:11:30[app.js] info: "login successfully"
+2021-05-16 10:12:00[app.js] info: "login successfully"
+2021-05-16 10:48:57[app.js] error: "ER_BAD_FIELD_ERROR: Unknown column 'room_id' in 'where clause'"
+2021-05-16 10:49:07[app.js] error: "ER_BAD_FIELD_ERROR: Unknown column 'room_id' in 'where clause'"
+2021-05-16 10:51:17[app.js] error: "ER_BAD_FIELD_ERROR: Unknown column 'room_id' in 'where clause'"
+2021-05-16 10:52:32[app.js] error: "ER_BAD_FIELD_ERROR: Unknown column 'room_id' in 'where clause'"

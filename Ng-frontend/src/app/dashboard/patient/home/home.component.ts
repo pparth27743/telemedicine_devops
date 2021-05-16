@@ -130,9 +130,8 @@ export class HomeComponent implements OnInit {
     async makeCall(doc_id) {
         this.setupSocket(this.objDoctors[doc_id]);
         await this.createRoom();
-        console.log(this.roomId);
         this.userService.addPatientToWaitList(doc_id, this.roomId).subscribe(res => {
-            console.log(res);
+                
         });
     }
 
@@ -146,7 +145,7 @@ export class HomeComponent implements OnInit {
         this.roomId = data['room-id'];        
         await this.setLocalMedia();
         // this.el_room_id.nativeElement.innerText = this.roomId;
-        this.socket.emit('join', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId });
+        this.socket.emit('create', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId });
             
     }
 

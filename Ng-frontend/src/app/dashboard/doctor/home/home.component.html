@@ -28,27 +28,31 @@
     </div>
   </section>
    -->
-  
-  
-   <div class="row">
-    <div class="col-md-12 text-center">
-      <mat-form-field appearance="fill">
-        <mat-label>Patient</mat-label>
-        <mat-select #patientSelect>
-          <mat-option *ngFor="let patient of listOfPatient" [value]="patient.value">
-            <div>
-              <p>Patient Name : {{patient.viewValue}}</p>
-              <i class="fa fa-phone" aria-hidden="true"></i>
-              <i class="fa fa-times" aria-hidden="true"></i>
+
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <div *ngFor="let patient of listOfPatient; let i = index" class="drop-item">
+            <h5>{{patient.viewValue}}</h5>
+            <div class="text-center" style="font-size: 1.25rem;">
+              <i class="fa fa-phone" aria-hidden="true" (click)="acceptCall(patient, i)"
+                style="width: 50%; color: green; cursor: pointer;"></i>
+              <i class="fa fa-times" aria-hidden="true" (click)="rejectCall(patient, i)"
+                style="width: 50%; color: red; cursor: pointer;"></i>
             </div>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+            <hr style="margin: 0px 0px;">
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- {{patient.viewValue}} -->
-
-   <hr>
+  <hr>
 
   <ng-template #content let-modal>
     <div class="modal-header">
@@ -59,17 +63,20 @@
     </div>
     <div class="modal-body">
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox"  [(ngModel)]="newStream_audioEnabled" id="audio-check" value="audio">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="newStream_audioEnabled" id="audio-check"
+          value="audio">
         <label class="form-check-label" for="audio-check">Audio Track</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="checkbox" [(ngModel)]="newStream_videoEnabled" id="video-check"  value="video">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="newStream_videoEnabled" id="video-check"
+          value="video">
         <label class="form-check-label" for="video-check">Video Track</label>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">Close</button>
-      <button type="button" class="btn btn-primary" (click)="addStream()"  (click)="modal.close()" data-dismiss="modal">Add Tracks</button>
+      <button type="button" class="btn btn-primary" (click)="addStream()" (click)="modal.close()"
+        data-dismiss="modal">Add Tracks</button>
     </div>
   </ng-template>
 

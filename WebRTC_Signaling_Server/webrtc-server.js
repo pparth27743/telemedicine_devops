@@ -102,18 +102,30 @@ function socketHandler(socket) {
     });
 
     socket.on('join', (data) => {
+        
+        console.log(socket.nsp.name);
+        
+        console.log(io._nsps.get(socket.nsp.name).adapter.rooms.has(data['room-id']));
+        console.log(data['room-id']);
+
         if (io._nsps.get(socket.nsp.name).adapter.rooms.has(data['room-id']) === true) {
+            console.log("joined");
             socket.join(data['room-id']);
             socket.broadcast.in(data['room-id']).emit('room-joined', data);
         }
-        else {
-            socket.join(data['room-id']);
-            const doc_socket_id = socket_namespace[socket.nsp.name.slice(1)];
-            if(doc_socket_id){
-                socket.to(doc_socket_id).emit('new-patient', data);
-            }
+    });
+
+    socket.on('create', (data) => {
+        socket.join(data['room-id']);
+
+        console.log(io._nsps.get(socket.nsp.name).adapter.rooms);
+
+        const doc_socket_id = socket_namespace[socket.nsp.name.slice(1)];
+        if(doc_socket_id){
+            socket.to(doc_socket_id).emit('new-patient', data);
         }
     });
+    
 
     socket.on('send-metadata', (data) => {
         socket.to(data['peer-id']).emit('send-metadata', data);

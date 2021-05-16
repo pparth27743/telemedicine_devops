@@ -39,3 +39,12 @@ video.transformX {
 mat-form-field {
     width: 100%;
   }
+
+  .drop-item {
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}

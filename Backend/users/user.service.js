@@ -97,6 +97,18 @@ module.exports = {
             }
         );
     },
+    removePatientFromWaitlistService: (data, callBack) => {
+        pool.query(
+            `DELETE FROM ${process.env.MYSQL_DB}.pending_calls WHERE (\`roomid\` = ?)`,
+            [data.room_id],
+            (error, results, fields) => {
+                if (error) {
+                    callBack(error);
+                }
+                return callBack(null, results);
+            }
+        );
+    },
     getWaitingPatientsService: (data, callBack) => {
         pool.query(
             `SELECT PC.id, PC.roomid, PC.patient_id, UP.firstname, UP.lastname FROM ${process.env.MYSQL_DB}.user_patient as UP, ${process.env.MYSQL_DB}.pending_calls as PC where UP.id = PC.patient_id and doctor_id = ?`,
