@@ -9,7 +9,9 @@ const {
     getDoctors,
     addToWaitList,
     getWaitingPatients,
-    removePatientFromWaitlist
+    removePatientFromWaitlist,
+    addPrescription,
+    getPrescription
 } = require("./user.controller");
 
 
@@ -21,6 +23,8 @@ router.post("/getdoctors", getDoctors);
 router.post("/addtowaitlist", addToWaitList);
 router.post("/getwaitingpatients", getWaitingPatients);
 router.post("/removefromwaitlist", removePatientFromWaitlist);
+router.post("/addprescription", addPrescription);
+router.post("/getprescription", getPrescription);
 
 
 

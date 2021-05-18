@@ -59,6 +59,10 @@ export class HomeComponent implements OnInit {
     doctors;
     objDoctors;  // namespace related to doctor is stored here
 
+    prescription_details = "No Prescription :(";
+    selected_doc_id;
+
+
 
     @ViewChild('room_id') el_room_id;
     @ViewChild('sec_details') el_sec_details;
@@ -72,6 +76,15 @@ export class HomeComponent implements OnInit {
 
     open(content) {
         this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
+    }
+
+    getPrescription() {
+        this.userService.getPrescription(this.selected_doc_id).subscribe(res => {
+            const len = res['data'].length;
+            if (len != 0) {
+                this.prescription_details = res['data'][len - 1]['details'];
+            }
+        })
     }
 
     onChangeSpecialization(specialization) {
@@ -120,23 +133,26 @@ export class HomeComponent implements OnInit {
     }
 
     async makeCall(doc_id) {
+        this.selected_doc_id = doc_id;
         this.setupSocket(this.objDoctors[doc_id]);
         await this.createRoom();
         this.userService.addPatientToWaitList(doc_id, this.roomId).subscribe(res => {
-                
+
         });
     }
 
     async createRoom() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.clientName = currentUser['firstname'] + ' ' + (currentUser['lastname'] ? currentUser['lastname'] : '');
+        const patient_id = currentUser['id'];
+
 
         // Get Room Id
         const data = await this.webrtcService.createRoom().toPromise();
-        this.roomId = data['room-id'];        
+        this.roomId = data['room-id'];
         await this.setLocalMedia(true, true);
         this.el_room_id.nativeElement.innerText = this.roomId;
-        this.socket.emit('create', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId });
+        this.socket.emit('create', { 'room-id': this.roomId, 'client-name': this.clientName, 'client-id': this.clientId, 'patient_id' :patient_id });
         this.toggleButtonDisability(true);
     }
 
@@ -191,12 +207,12 @@ export class HomeComponent implements OnInit {
 
     toggleButtonDisability(disable) {
         if (disable === true) {
-          this.el_sec_details.nativeElement.style.display = 'none';
-          this.el_sec_controls.nativeElement.style.display = 'block';
+            this.el_sec_details.nativeElement.style.display = 'none';
+            this.el_sec_controls.nativeElement.style.display = 'block';
         }
         else {
-          this.el_sec_details.nativeElement.style.display = 'block';
-          this.el_sec_controls.nativeElement.style.display = 'none';
+            this.el_sec_details.nativeElement.style.display = 'block';
+            this.el_sec_controls.nativeElement.style.display = 'none';
         }
     }
 
@@ -672,13 +688,13 @@ export class HomeComponent implements OnInit {
             });
 
             this.userService.removePatientFromWaitlist(this.roomId).subscribe(res => {
-                if(res['success']){
-                  
+                if (res['success']) {
+
                 }
-                else{
-                  console.log("Could not remove.");
+                else {
+                    console.log("Could not remove.");
                 }
-              });
+            });
         }
     }
 

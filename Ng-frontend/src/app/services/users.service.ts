@@ -36,4 +36,16 @@ export class UsersService {
       return this.http.post(`${baseUrl}users/addtowaitlist/`, { 'doctor_id': doctor_id, 'patient_id' : patient_id, 'room_id' : roomId });
   }
 
+  addPrescription(patient_id, details){
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const doctor_id = currentUser['id'];
+    return this.http.post(`${baseUrl}users/addprescription/`, { 'doctor_id': doctor_id, 'patient_id' : patient_id, 'details' : details });
+  }
+
+  getPrescription(doctor_id){
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const patient_id = currentUser['id'];
+    return this.http.post(`${baseUrl}users/getprescription/`, { 'doctor_id': doctor_id, 'patient_id' : patient_id });
+  }
+
 }

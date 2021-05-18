@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
     this.userService.getWaitingPatients(currentUser['id']).subscribe(result => {
       result['data'].forEach(res => {
         const name = res.firstname + ' ' + (res.lastname ? res.lastname : '');
-        this.listOfPatient.push({ value: res.roomid, viewValue: name });
+        this.listOfPatient.push({ value: res.roomid, viewValue: name, patient_id: res['patient_id']});
       });
     });
   }
@@ -83,6 +83,12 @@ export class HomeComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
+  addPrescription(details){
+    const patient_id =  this.listOfPatient[this.selectPatientIndex]['patient_id'];
+    this.userService.addPrescription(patient_id, details).subscribe(res => {
+      console.log(res);
+    });
+  }
 
   acceptCall(data, index): void {
     this.roomId = data.value;
@@ -582,7 +588,8 @@ export class HomeComponent implements OnInit {
   }
 
   onNewPatient(data) {
-    this.listOfPatient.push({ value: data['room-id'], viewValue: data['client-name'] });
+    // some times not able to push into array
+    this.listOfPatient.push({ value: data['room-id'], viewValue: data['client-name'], patient_id: data['patient_id']});
   }
 
   onConnect(namespace_id) {

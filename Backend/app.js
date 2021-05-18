@@ -82,6 +82,27 @@ con.connect(function (err) {
       });
     
 
+      stmt = `CREATE TABLE IF NOT EXISTS \`${process.env.MYSQL_DB}\`.\`prescription\` (` +   
+      "`id` INT NOT NULL AUTO_INCREMENT," +
+      "`details` TEXT(1000) NULL," +
+      "`doctor_id` INT NOT NULL," +
+      "`patient_id` INT NOT NULL," +
+      "PRIMARY KEY (`id`)," +
+      "CONSTRAINT `prescription_doctor_id` " +
+        "FOREIGN KEY (`doctor_id`) "+
+        "REFERENCES `telemedicine`.`user_doctor` (`id`) " +
+        "ON DELETE CASCADE " +
+        "ON UPDATE CASCADE, " +
+      "CONSTRAINT `prescription_patient_id` " +
+        "FOREIGN KEY (`patient_id`) " +
+        "REFERENCES `telemedicine`.`user_patient` (`id`) " +
+        "ON DELETE CASCADE " +
+        "ON UPDATE CASCADE )";
+  
+        con.query(stmt, function (err, result) {
+          if (err) throw err;
+        });
+
 });
 
 const port = process.env.APP_PORT || 3000;

@@ -1,28 +1,30 @@
 <div class="container mt-4" #CreateJoinRoom>
   <section #sec_details id="sec-details">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">Dropdown button
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <div *ngFor="let patient of listOfPatient; let i = index" class="drop-item">
-            <h5>{{patient.viewValue}}</h5>
-            <div class="text-center" style="font-size: 1.25rem;">
-              <i class="fa fa-phone" aria-hidden="true" (click)="acceptCall(patient, i)"
-                style="width: 50%; color: green; cursor: pointer;"></i>
-              <i class="fa fa-times" aria-hidden="true" (click)="rejectCall(patient, i)"
-                style="width: 50%; color: red; cursor: pointer;"></i>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">Dropdown button
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div *ngFor="let patient of listOfPatient; let i = index" class="drop-item">
+              <h5>{{patient.viewValue}}</h5>
+              <div class="text-center" style="font-size: 1.25rem;">
+                <i class="fa fa-phone" aria-hidden="true" (click)="acceptCall(patient, i)"
+                  style="width: 50%; color: green; cursor: pointer;"></i>
+                <i class="fa fa-times" aria-hidden="true" (click)="rejectCall(patient, i)"
+                  style="width: 50%; color: red; cursor: pointer;"></i>
+              </div>
+              <hr style="margin: 0px 0px;">
             </div>
-            <hr style="margin: 0px 0px;">
           </div>
         </div>
       </div>
     </div>
-  </div>
+
+
   </section>
-  
+
   <hr>
 
   <ng-template #content let-modal>
@@ -51,6 +53,28 @@
     </div>
   </ng-template>
 
+
+
+  <ng-template #prescription let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="selectTracksModalTitle">Prescription</h5>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Details</label>
+        <textarea #detailsOfPrescription class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">Close</button>
+      <button type="button" class="btn btn-primary" (click)="addPrescription(detailsOfPrescription.value)" (click)="modal.close()"
+        data-dismiss="modal">Save</button>
+    </div>
+  </ng-template>
+
   <section #sec_controls id="sec-controls" style="display: none">
     <div class="row mt-1">
       <div class="col-md-6 text-center">
@@ -58,10 +82,13 @@
           xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
         </div>
       </div>
-      <div class="col-md-3 text-center">
+      <div class="col-md-2 text-center">
         <button class="btn btn-lg btn-outline-primary" (click)="open(content)">New Stream</button>
       </div>
-      <div class="col-md-3 text-center">
+      <div class="col-md-2 text-center">
+        <button id="btn-add-prescription" class="btn btn-warning" (click)="open(prescription)">Add Prescription</button>
+      </div>
+      <div class="col-md-2 text-center">
         <button #btn_end_call id="btn-end-call" class="btn btn-danger" (click)="endCall()">End Call</button>
       </div>
     </div>
