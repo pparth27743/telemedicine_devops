@@ -26,5 +26,5 @@
 8. Type `cd WebRTC_Signaling_Server/ && node webrtc-server.js` in third terminal.
 9. Now application is up and running you can access it on `https://localhost:4200/` 
 
-As there are no Doctor and Patient in the database, first you signup a Doctor and Patient to use application. 
+As there are no Doctor and Patient in the database, first you have to signup a Doctor and Patient to use application. 
 
