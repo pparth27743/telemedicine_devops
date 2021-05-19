@@ -19,7 +19,7 @@ Our project idea was to design a system where doctors can meet/consult patients 
    
    One another feature of this app is there no requirement to share ID's with which the doctors and patient gets connected. When the patient calls any doctor, the notification reaches to the doctor in real time (if he is logged in, in case the doctor is not logged in, the call will be stored in backend as pending and the notification will reach doctor when he logs in) and he/she has to just click a button to accept/reject calls.
 
-### To Run this project follow the steps belows,
+## To Run this project follow the steps belows,
 
 1. Git Clone the repository
 2. Open terminal inside the repository/folder in your machine.
